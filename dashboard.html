@@ -10,6 +10,7 @@
   --active:#2563A8; --active-soft:#DDEAF8;
   --todo:#8C96A4; --todo-soft:#ECEFF3;
   --risk:#B23A3A; --risk-soft:#F8E3E3;
+  --shade:rgba(15,21,28,.45);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -17,7 +18,7 @@
     --accent:#8DB8E4; --accent-soft:#1D2D3E;
     --done:#62C497; --done-soft:#173226; --review:#E0A64A; --review-soft:#3A2B12;
     --active:#7FB0EC; --active-soft:#1A2C44; --todo:#6F7B8A; --todo-soft:#212B36;
-    --risk:#EC8080; --risk-soft:#3A1D1F;
+    --risk:#EC8080; --risk-soft:#3A1D1F; --shade:rgba(0,0,0,.6);
   }
 }
 :root[data-theme="dark"]{
@@ -25,7 +26,7 @@
   --accent:#8DB8E4; --accent-soft:#1D2D3E;
   --done:#62C497; --done-soft:#173226; --review:#E0A64A; --review-soft:#3A2B12;
   --active:#7FB0EC; --active-soft:#1A2C44; --todo:#6F7B8A; --todo-soft:#212B36;
-  --risk:#EC8080; --risk-soft:#3A1D1F;
+  --risk:#EC8080; --risk-soft:#3A1D1F; --shade:rgba(0,0,0,.6);
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:14px;line-height:1.55;padding-inline:16px;padding-block:24px 48px}
@@ -33,14 +34,14 @@ body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans KR",system
 .mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
 h1{font-size:22px;line-height:1.3;margin:0;text-wrap:balance;font-weight:700}
 h2{font-size:15px;margin:0 0 12px;font-weight:600}
+h3{font-size:13px;margin:0 0 8px;font-weight:600}
 .eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
-.sub{color:var(--muted);margin:4px 0 0;max-width:72ch}
+.sub{color:var(--muted);margin:4px 0 0;max-width:80ch}
 section{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}
 header.top{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end}
 .asof{text-align:right;color:var(--muted);font-size:12px}
 .asof b{color:var(--ink);font-weight:600}
 
-/* summary */
 .summary{display:grid;grid-template-columns:minmax(220px,1.1fr) 2fr;gap:24px;align-items:center}
 .big{font-size:44px;font-weight:700;line-height:1;letter-spacing:-.02em}
 .big small{font-size:18px;color:var(--muted);font-weight:500}
@@ -50,11 +51,10 @@ header.top{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end}
 .dot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:1px}
 .now{border-left:3px solid var(--active);padding:4px 0 4px 16px}
 .now .t{font-size:17px;font-weight:600;margin:2px 0 6px}
-.now p{margin:0;color:var(--muted);max-width:70ch}
+.now p{margin:0;color:var(--muted);max-width:72ch}
 
-/* phases */
 .phases{display:grid;grid-template-columns:repeat(10,1fr);gap:6px}
-.ph{background:var(--todo-soft);border-radius:6px;padding:8px 8px 10px;min-height:88px;display:flex;flex-direction:column;gap:4px;position:relative}
+.ph{background:var(--todo-soft);border-radius:6px;padding:8px 8px 10px;min-height:88px;display:flex;flex-direction:column;gap:4px}
 .ph .n{font-size:11px;color:var(--muted)}
 .ph .nm{font-size:12px;font-weight:600;line-height:1.3}
 .ph .pc{margin-top:auto;font-size:12px}
@@ -62,34 +62,31 @@ header.top{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end}
 .ph.part{background:var(--active-soft)} .ph.part .pc{color:var(--active)}
 .ph.cur{outline:2px solid var(--active);outline-offset:-2px}
 
-/* task board */
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin-bottom:12px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin-bottom:12px;align-items:center}
 .board{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.board .phlabel{grid-column:1/-1;font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:6px;display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:4px}
-.task{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:3px;border:1px solid var(--line);border-left:4px solid var(--todo);border-radius:6px;padding:8px 10px;background:var(--panel);min-width:0}
+.board .phlabel{grid-column:1/-1;font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:6px;border-bottom:1px solid var(--line);padding-bottom:4px}
+.task{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:3px;border:1px solid var(--line);border-left:4px solid var(--todo);border-radius:6px;padding:8px 10px;background:var(--panel);min-width:0}
 .task:hover{background:var(--bg)}
 .task:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-.task .row{display:flex;justify-content:space-between;gap:6px;align-items:baseline}
+.task .row{display:flex;justify-content:space-between;gap:6px;align-items:center}
 .task .id{font-size:12px;font-weight:500}
 .task .nm{font-size:12.5px;line-height:1.35;overflow-wrap:anywhere}
 .task .own{font-size:11px;color:var(--muted)}
+.pills{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
 .pill{font-size:10.5px;padding:1px 7px;border-radius:999px;white-space:nowrap;font-weight:500}
-.s-frozen{border-left-color:var(--done)} .s-closed{border-left-color:var(--done)}
+.s-frozen,.s-closed{border-left-color:var(--done)}
 .s-review{border-left-color:var(--review)} .s-next{border-left-color:var(--active)} .s-todo{border-left-color:var(--todo)}
 .p-frozen,.p-closed{background:var(--done-soft);color:var(--done)}
 .p-review{background:var(--review-soft);color:var(--review)}
 .p-next{background:var(--active-soft);color:var(--active)}
 .p-todo{background:var(--todo-soft);color:var(--muted)}
-.flag{color:var(--review);font-size:11px}
+.p-rework{background:var(--risk-soft);color:var(--risk)}
+.p-note{background:var(--accent-soft);color:var(--accent)}
 
-.detail{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px;display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:13px}
-.detail dt{color:var(--muted)} .detail dd{margin:0;overflow-wrap:anywhere}
-
-/* two col */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.kv{display:grid;grid-template-columns:1fr auto;gap:0;border-top:1px solid var(--line)}
+.kv{display:grid;grid-template-columns:1fr auto;border-top:1px solid var(--line)}
 .kv div{padding:8px 0;border-bottom:1px solid var(--line)}
-.kv .v{text-align:right;font-weight:600}
+.kv .v{text-align:right;font-weight:600;padding-left:12px}
 .kv .k small{display:block;color:var(--muted);font-size:11.5px;font-weight:400}
 .issues{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 .issues li{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:10px 12px;border-radius:6px;background:var(--bg)}
@@ -97,18 +94,52 @@ header.top{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end}
 .sev.h{background:var(--risk-soft);color:var(--risk)} .sev.m{background:var(--review-soft);color:var(--review)} .sev.l{background:var(--todo-soft);color:var(--muted)}
 .issues b{font-weight:600} .issues p{margin:2px 0 0;color:var(--muted);font-size:12.5px}
 
+.tbl{overflow-x:auto;margin-bottom:4px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.03em;white-space:nowrap}
+td.num,th.num{text-align:right;white-space:nowrap;font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+tr.hl td{background:var(--done-soft)}
+tr.bad td{background:var(--risk-soft)}
+.note{font-size:12px;color:var(--muted);margin:10px 0 0}
 .timeline{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);display:flex;flex-direction:column;gap:10px}
 .timeline li{padding-left:14px;position:relative;font-size:13px}
 .timeline li::before{content:"";position:absolute;left:-6px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--done);border:2px solid var(--panel)}
 .timeline .d{color:var(--muted);font-size:12px;margin-right:6px}
-.tbl{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.04em}
-td.num{text-align:right}
-.note{font-size:12px;color:var(--muted);margin:10px 0 0}
 footer{font-size:12px;color:var(--muted)}
 footer code{font-family:"IBM Plex Mono",monospace;font-size:11.5px}
+
+.research{display:flex;flex-direction:column;gap:12px}
+.purpose{margin:0;font-size:14.5px;line-height:1.7;max-width:92ch}
+.purpose b{font-weight:600}
+.rqs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rq{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
+.rq .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rq .id{font-weight:600;color:var(--accent)}
+.rq .q{font-weight:600;line-height:1.45}
+.rq .m{font-size:12.5px;color:var(--muted)}
+.rq .st{font-size:12.5px;border-top:1px dashed var(--line);padding-top:6px}
+@media (max-width:900px){.rqs{grid-template-columns:1fr}}
+/* inline detail */
+.detail{grid-column:1/-1;border:1px solid var(--accent);border-radius:8px;background:var(--panel);box-shadow:0 2px 10px rgba(15,21,28,.08);overflow:hidden}
+.task.open{background:var(--accent-soft);border-color:var(--accent)}
+/* detail dialog */
+dialog{border:none;border-radius:12px;padding:0;background:var(--panel);color:var(--ink);width:min(920px,calc(100vw - 32px));max-height:calc(100vh - 48px)}
+dialog::backdrop{background:var(--shade)}
+.dh{background:var(--panel);border-bottom:1px solid var(--line);padding:16px 18px 12px;display:grid;grid-template-columns:1fr auto;gap:12px;z-index:1}
+.dh h2{font-size:17px;margin:4px 0 0}
+.dh .meta{font-size:12px;color:var(--muted);margin-top:4px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+.x{all:unset;cursor:pointer;width:32px;height:32px;border-radius:6px;display:grid;place-items:center;font-size:20px;color:var(--muted)}
+.x:hover{background:var(--bg)} .x:focus-visible{outline:2px solid var(--accent)}
+.db{padding:14px 16px 18px;display:flex;flex-direction:column;gap:18px}
+.db p.sum{margin:0;max-width:78ch}
+.blk{display:flex;flex-direction:column;gap:6px}
+.rework{border:1px solid var(--risk);border-radius:8px;padding:12px 14px;background:var(--risk-soft)}
+.rework h3{color:var(--risk)}
+.rework table td,.rework table th{border-bottom-color:color-mix(in srgb,var(--risk) 25%,transparent)}
+.rework td{background:transparent}
+.gov{border-left:3px solid var(--accent);padding:6px 0 6px 12px;color:var(--muted);font-size:12.5px}
+.empty{color:var(--muted);font-size:13px}
 
 @media (max-width:900px){
   .phases{grid-template-columns:repeat(5,1fr)}
@@ -120,6 +151,8 @@ footer code{font-family:"IBM Plex Mono",monospace;font-size:11.5px}
   .phases{grid-template-columns:repeat(2,1fr)}
   .board{grid-template-columns:1fr}
   .big{font-size:36px}
+  .detail th,.detail td,.detail td.num{white-space:normal;overflow-wrap:anywhere;padding:6px 6px;font-size:12.5px}
+  .db{padding:12px 12px 16px}.dh{padding:12px 12px 10px}.dh h2{font-size:16px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -133,6 +166,13 @@ footer code{font-family:"IBM Plex Mono",monospace;font-size:11.5px}
     </div>
     <div class="asof">기준일 <b class="mono" id="asof"></b><br>근거: M02 90_CHANGELOG · 91_FREEZE_REGISTRY</div>
   </header>
+
+  <section class="research" aria-label="연구 개요">
+    <div class="eyebrow">연구 개요</div>
+    <p class="purpose" id="purpose"></p>
+    <div class="rqs" id="rqs"></div>
+    <p class="note" id="dlnote"></p>
+  </section>
 
   <section class="summary" aria-label="전체 공정">
     <div>
@@ -156,10 +196,16 @@ footer code{font-family:"IBM Plex Mono",monospace;font-size:11.5px}
       <span><span class="dot" style="background:var(--review)"></span>검토·인수 대기</span>
       <span><span class="dot" style="background:var(--active)"></span>다음 착수</span>
       <span><span class="dot" style="background:var(--todo)"></span>미착수</span>
-      <span>· Task를 누르면 근거 기록이 보입니다</span>
+      <span class="pill p-rework">재작업</span><span>처음 시도에서 오류·반려 후 다시 수행</span>
+      <span>· Task를 누르면 바로 아래에 산출물과 수행결과가 펼쳐집니다</span>
     </div>
     <div class="board" id="board"></div>
-    <dl class="detail" id="detail" hidden></dl>
+  </section>
+
+  <section aria-label="재작업 이력">
+    <h2>처음 시도에서 오류가 있었던 작업</h2>
+    <div class="tbl"><table id="reworkAll"></table></div>
+    <p class="note">모든 경우 원본(최초 산출물·실패 결과)은 삭제하지 않고 CHANGELOG에 남긴 뒤 수정본을 새 버전으로 동결함.</p>
   </section>
 
   <div class="two">
@@ -172,12 +218,6 @@ footer code{font-family:"IBM Plex Mono",monospace;font-size:11.5px}
       <ul class="issues" id="issues"></ul>
     </section>
   </div>
-
-  <section aria-label="TT28 LLM 실행 이력">
-    <h2>TT28 LLM 배치 추출 이력 (gpt-5.6-terra)</h2>
-    <div class="tbl"><table id="runs"></table></div>
-    <p class="note">Full 550 passage 기준. INVALID_EVIDENCE는 삭제·수정하지 않고 원본 보존, TT29 오류분석 대상으로 이관됨.</p>
-  </section>
 
   <div class="two">
     <section aria-label="동결 이력">
@@ -194,95 +234,209 @@ footer code{font-family:"IBM Plex Mono",monospace;font-size:11.5px}
   <footer id="foot"></footer>
 </div>
 
+
+
 <script>
-/* ============================================================
+/* ==================================================================
    업데이트는 이 DATA 블록만 고치면 됩니다.
-   status 값: frozen | closed | review | next | todo
-   ============================================================ */
+   st: frozen | closed | review | next | todo
+   out: [산출물, 버전·상태]          tables: [{t:제목, c:[열], r:[[행]]}]
+   rw:  [[일자, 처음 시도의 문제, 조치·결과]]  (있으면 '재작업' 표시)
+   gov: 거버넌스·해석상 유의점 (선택)
+   ================================================================== */
 const DATA = {
   asof: "2026-09-20",
   team: "최동욱(연구총괄) · 이동원(온톨로지·LLM) · 전수련(검증·평가) · 최대영 교수(지도교수·교신저자)",
+  research: {
+    purpose: "국내 항공철도사고조사위원회가 발행한 국제항공운송사업자 관련 공식 최종 조사보고서 <b>62건</b>(발생일 2005-01-09~2025-04-23)을 대상으로, PDF의 비정형 서술에 흩어진 사고의 사건·조사결과·요인·원인·안전권고를 원문 page·block까지 역추적 가능한 형태로 구조화한다. ICAO ADREP/ECCAIRS·CICTT 표준에서 내려오는 <b>하향식 개념</b>과 실제 보고서에서 올라오는 <b>상향식 개념</b>을 합쳐 운영형 코드북(v0.2, 43개 코드)을 만들고, 3인 독립코딩으로 <b>Human Gold</b>(10개 보고서, 6,962 Unit)를 확정한 뒤 동일 조건의 <b>LLM 자동추출</b>과 비교한다. 결과를 RDF/OWL 지식그래프로 구현하고 Protégé·HermiT 논리검증, CQ/SPARQL 기능검증, 전문가 Delphi 내용타당성으로 단계적으로 검증하는 재현 가능한 통합 프레임워크를 제시하는 것이 목표다.",
+    rqs: [
+      ["RQ1","항공사고조사 지식의 핵심 개념·관계를 어떻게 도출하고 구조화할 수 있는가?","하향식·상향식 개념도출, 운영형 코드북, 3인 독립코딩·Human Gold, LLM 추출 비교, RDF 매핑","진행 중 — 코드북 v0.2·Human Gold v1.0·LLM 추출(550건) 동결. LLM 성능평가(TT29)와 RDF 매핑(TT30~32) 남음."],
+      ["RQ2","구축된 온톨로지는 구조적·논리적·내용적으로 타당한가?","Protégé 구조검토, HermiT 일관성·unsatisfiable class, ontology metrics, 전문가 Delphi/CVI","미착수 — M07 온톨로지 생성(TT32) 이후 TT33~TT36, TT39에서 검증."],
+      ["RQ3","구축된 지식그래프는 CQ/SPARQL 기반 의미검색과 관계탐색에 활용 가능한가?","CQ 13문항(1-hop·2-hop·집계·비교·무응답), GraphDB 적재, expected vs actual 비교","준비 단계 — CQ v1.0-RC1 팀검토 대기. GraphDB·SPARQL 실행(TT37~TT38) 남음."]
+    ],
+    dlnote: "논문 초안 V7(hwp·pdf) 다운로드는 Streamlit 화면 맨 위 버튼을 사용하세요."
+  },
   now: {
-    task: "TT29",
-    title: "LLM 결과 vs Human Gold 성능평가 및 오류유형 분석",
-    text: "TT28이 2026-09-20 FROZEN/CLOSED로 인계됨. 입력: 동결 M06(550 passage, SUCCESS 516 / INVALID_EVIDENCE 34)과 Human Gold v1.0(6,962 UNIT). entity·relation P/R/F1, schema valid rate, evidence accuracy 산출과 EVIDENCE_NOT_IN_INPUT 59건 오류분석이 첫 작업. 담당 이동원, 협업 전수련."
+    task: "TT31 · TT29",
+    title: "RDF 명세(TT31) 착수 · LLM 성능평가(TT29) 대기",
+    text: "TT28이 09-20 FROZEN/CLOSED로 인계되면서 인계기록의 다음 단계가 'TT31 STEP 01'(이동원)로 지정됨. 한편 Task Card 순서상 TT29(LLM vs Human Gold P/R/F1·오류분석)와 TT30(RDF 매핑 명세)은 아직 기록이 없음. 두 흐름의 순서를 팀에서 확정할 필요가 있음."
   },
   phases: ["연구기획·구조","데이터 인벤토리·수집","PDF 추출·RAW JSON","Provenance·정제","분류체계·코드북","CQ·본코딩·Gold","LLM 프로토콜·추출","LLM 평가·RDF","Protégé·Reasoner","GraphDB·SPARQL·논문"],
   tasks: [
-    ["TT01","연구범위·산출물·연구경계 확정","최동욱","frozen","2026-08-19","Scope v1.0 FROZEN. 검토대상 326건 → 분석대상 62건, 발생일 2005-01-09~2025-04-23."],
-    ["TT02","선행연구 검색·문헌매트릭스","최동욱","frozen","2026-08-20","01_LITERATURE v1.0 FROZEN (S01~S24). 연구공백 RG01~RG05 도출."],
-    ["TT03","연구목적·RQ·논문 목차","최동욱","closed","2026-08-20","RQ1~RQ3 확정, M01/M10 반영. CLOSED."],
-    ["TT04","폴더·파일규칙·버전관리","최동욱","review","2026-08-20","HANDOFF 상태 REVIEW_REQUIRED. 독립검토·FREEZE 기록이 이후 없음."],
-    ["TT05","인벤토리 필드·포함/제외 기준","최동욱","frozen","2026-08-21","23개 필드 v1.0 FROZEN."],
-    ["TT06","공개 사고·준사고 PDF 수집","최동욱","closed","2026-08-21","62건 PDF·SHA-256 등록, RAW_PDF immutable 선언."],
-    ["TT07","분석표본 선정·CORE/FULL 동결","최동욱","frozen","2026-08-21","n=62 FROZEN. CORE 59 / FULL 3 (KOR_003, KOR_025, KOR_062)."],
-    ["TT08","PDF 유형·OCR 필요성 점검","전수련","closed","—","Tracker상 완료. 90_CHANGELOG에 TT08 행 없음.","nolog"],
-    ["TT09","Python 추출환경·패키지 고정","전수련","closed","—","추출엔진 pymupdf 선정(M03). 90_CHANGELOG에 TT09 행 없음.","nolog"],
-    ["TT10","RAW JSON 스키마 확정","전수련","closed","2026-08-29","block_order/block_id 규칙을 M03 extraction.block_identity에 반영."],
-    ["TT11","선정 PDF 일괄 추출","전수련","closed","2026-08-29","block_id 누락 backfill 후 M04 정식 반영, validate PASS."],
-    ["TT12","RAW JSON 원문대조 QC","전수련","frozen","2026-08-28","RAW JSON Dataset v1.1 FROZEN (62건, manifest SHA-256 독립 재계산 일치)."],
-    ["TT13","page 매핑·Provenance 테이블","이동원","frozen","2026-08-30","05_PAGE_MAP v1.0 FROZEN — 62건 3,147 page."],
-    ["TT14","Cleaning 규칙·Quality Flag","이동원","frozen","2026-09-05","M03_CONFIG v1.0 FROZEN (정제 규칙, 6건 사전검토)."],
-    ["TT15","RAW→CLEANED 자동정제 구현","이동원","review","2026-09-08","CLEANED_JSON 62건 / 62,021 block 생성 PASS. HANDOFF 상태 PENDING_ACCEPTANCE로 남아 있음."],
-    ["TT16","CLEANED JSON 의미보존 검증·동결","전수련","frozen","2026-09-11","전처리 데이터 FROZEN."],
-    ["TT17","ADREP·CICTT Top-down 매핑","최동욱","frozen","2026-09-09","8개 개념군 Top-down mapping FROZEN."],
-    ["TT18","Bottom-up 개념·관계 후보","최동욱","closed","2026-09-09","Bottom-up 후보·pilot coding FROZEN 후 인계."],
-    ["TT19","8개 시트 코드북 v0.1","최동욱","closed","2026-09-09","Codebook v0.1 → 99_ARCHIVE로 이관(SUPERSEDED)."],
-    ["TT20","예비코딩·코드북 v0.2 동결","최동욱","frozen","2026-09-09","Operational Codebook v0.2 FROZEN (D001–D008 반영)."],
-    ["TT21","CQ 요구사항·CQ v0.1","전수련","frozen","2026-09-13","CQ v0.2 corrective FROZEN."],
-    ["TT22","CQ 내부검토·v1.0 동결","전수련","closed","2026-09-13","CQ v1.0 (13개) FROZEN·CLOSED."],
-    ["TT23","본코딩 작업분장·보고서 배정","최동욱","closed","2026-09-14","코딩방법·일치도 절차 문서(09-13), T23_CODING_CDW_FINAL(09-14). 90_CHANGELOG에 TT23 행 없음.","nolog"],
-    ["TT24","본코딩·코더 일치도·Gold 동결","전수련","frozen","2026-09-15","Human Gold v1.0 FROZEN — 10개 보고서 6,962 UNIT."],
-    ["TT25","LLM 비교평가 프로토콜","이동원","frozen","2026-09-18","Benchmark Protocol v1.0 FROZEN (TEST_v1.0 15 passage, 후보 3모델)."],
-    ["TT26","API 환경·보안키·클라이언트","이동원","closed","2026-09-18","Python 3.13.15, OpenAI/Anthropic/Google smoke PASS, secret scan 0."],
-    ["TT27","Prompt·Structured Schema","이동원","closed","2026-09-18","Prompt v1.0 / Schema v1.0 FROZEN."],
-    ["TT28","Batch 추출·JSONL 생성·검수","이동원","closed","2026-09-20","Prompt v1.2 / Schema v1.1. 550건 중 SUCCESS 516, INVALID_EVIDENCE 34. M06 FROZEN."],
-    ["TT29","LLM vs Human Gold 성능·오류분석","이동원","next","—","다음 착수 대상. 31_LLM_EVALUATION P/R/F1 칸 전부 PENDING_TT29."],
-    ["TT30","코드북→RDF Triple 매핑 명세","이동원","todo","—","32_RDF_MAPPING 시트 비어 있음."],
-    ["TT31","Namespace·IRI·Provenance 규칙","이동원","todo","—","M03 rdf.base_iri가 example.org 임시값. TT22 인계사항: Case-Event mapping 요건 반영."],
-    ["TT32","RDF/OWL 변환·TTL/OWL 생성","이동원","todo","—","M07_ontology.owl / M08_knowledge_data.ttl 미생성."],
-    ["TT33","Protégé OWL 로딩·구조 검토","전수련","todo","—",""],
-    ["TT34","대표 FULL 사례 Individual 로딩","전수련","todo","—",""],
-    ["TT35","HermiT 논리검증","전수련","todo","—",""],
-    ["TT36","Metrics·버전동결·GraphDB 이관 준비","전수련","todo","—",""],
-    ["TT37","GraphDB 적재·지식그래프 생성","전수련","todo","—",""],
-    ["TT38","CQ→SPARQL 기능검증","전수련","todo","—","M09_sparql_queries.rq 미생성."],
-    ["TT39","전문가 Delphi/내용타당성","전수련","todo","—","Delphi 패널·합의기준 PENDING (M01 12장)."],
-    ["TT40","결과 통합·논문·재현성 패키지","최동욱","todo","—","원고 초안 V7까지 진행 (아래 참조)."]
+  {id:"TT01",nm:"연구범위·산출물·연구경계 확정",own:"최동욱",st:"frozen",dt:"2026-08-19",
+   sum:"항공철도사고조사위원회 발행 보고서 중 국제항공운송사업자 관련 보고서로 연구대상을 한정하고 Scope v1.0을 동결함. 4인 독립검토 전원 PASS.",
+   out:[["M01 §1 연구범위 및 경계","Scope v1.0 FROZEN"],["M01 §2.1 산출물-파일 매핑 (13개 저장대상)","v0.1"],["M02 00_README (M01~M10 등록)","ACTIVE"]],
+   tables:[{t:"연구범위 (Scope v1.0)",c:["항목","확정값"],r:[["전체 검토대상","326건"],["최종 분석대상","62건"],["분석기간 (발생일 기준)","2005-01-09 ~ 2025-04-23"],["문서유형","공식 최종보고서 PDF (예비·중간보고서 제외)"],["제외기준","6개 유형 (운송사업자 외, 타 기관, 비최종, 중복, 원문 미확보, 기간 외)"],["연구 종료지점","구조화 → 온톨로지/RDF → GraphDB/SPARQL → 전문가 검증 → 논문"]]}]},
+  {id:"TT02",nm:"선행연구 검색·문헌매트릭스",own:"최동욱",st:"frozen",dt:"2026-08-20",
+   sum:"6개 검색군(G01~G06)으로 문헌을 검색하고 Source ID S01~S24 체계로 원문·해시를 관리. 문헌 QC에서 미해결 중복·누락·불일치 0건 확인 후 동결.",
+   out:[["M02 01_LITERATURE (문헌매트릭스·Source ID)","v1.0 FROZEN"],["01_MASTER/Sources 원문 보관","S01~S24"],["M01 §2.2 연구공백 RG01~RG05","v0.1"]],
+   tables:[{t:"도출된 연구공백",c:["ID","연구공백","연결 Task"],r:[["RG01","원문 구조보존부터 전문가 검증까지 End-to-End 통합 프레임 부족","TT09~TT39"],["RG02","ADREP/CICTT Top-down과 보고서 Bottom-up 개념 통합 부족","TT17~TT20"],["RG03","동일 조건 Multi-LLM 비교 + Human Gold 정량검증 부족","TT24~TT29"],["RG04","PDF page·block까지 역추적되는 Evidence Provenance 부족","TT10~TT13, TT30~TT32"],["RG05","κ·논리검증·CQ/SPARQL·Delphi를 결합한 다층 검증 부족","TT20, TT24, TT33~TT39"]]}]},
+  {id:"TT03",nm:"연구목적·RQ·논문 목차",own:"최동욱",st:"closed",dt:"2026-08-20",
+   sum:"TT01 범위와 TT02 연구공백을 기준으로 연구목적과 RQ1~RQ3를 정리하고 RQ별 데이터·방법·지표·결과위치를 매핑. M10 논문 5장 골격과 연결.",
+   out:[["M01 §3 연구목적·RQ, §4 RQ 매핑표","CLOSED"],["M10_manuscript.docx 논문 골격","v0.1"]],
+   tables:[{t:"연구질문",c:["RQ","질문","주요 검증"],r:[["RQ1","핵심 개념·관계를 어떻게 도출·구조화할 수 있는가","코드북, 코딩 일치도, RDF 매핑"],["RQ2","온톨로지가 구조·논리·내용적으로 타당한가","Protégé/HermiT, metrics, Delphi/CVI"],["RQ3","지식그래프가 CQ/SPARQL 의미검색에 활용 가능한가","CQ 실행 성공률, expected vs actual"]]}]},
+  {id:"TT04",nm:"폴더·파일규칙·버전관리",own:"최동욱",st:"review",dt:"2026-08-20",
+   sum:"공식 폴더 구조(01_MASTER~99_ARCHIVE)와 M01~M10 핵심파일 규칙을 정비하고 M04 validate를 통과. 독립검토 요청 후 FREEZE 기록은 아직 없음.",
+   out:[["공식 폴더트리 + M01~M05","v0.1"],["M04 validate 실행","PASS"],["HANDOFF","REVIEW_REQUIRED"]],
+   tables:[{t:"주요 결정",c:["항목","내용"],r:[["PDF 추출엔진","단일 PyMuPDF 전제 → PyMuPDF·PyMuPDF4LLM·Docling 3개 후보 비교 구조로 변경"],["파일명 규칙","[report_id].pdf / _raw.json / _cleaned.json"],["변경관리","90_CHANGELOG에 Task당 1행, 이전 버전은 99_ARCHIVE"]]}]},
+  {id:"TT05",nm:"인벤토리 필드·포함/제외 기준",own:"최동욱",st:"frozen",dt:"2026-08-21",
+   sum:"62건 전수조사 설계에 맞춰 Data Inventory 23개 필드와 허용값·판정규칙을 v1.0으로 동결.",
+   out:[["M02 03_DATA_INVENTORY schema/rules","v1.0 FROZEN"],["logical SHA-256","a10cc137…c8ed…"]],
+   tables:[{t:"주요 결정",c:["항목","내용"],r:[["필드 수","23개"],["title","공통값 '항공사고조사보고서'로 관리, 행 필드에서 제외"],["qc_status","초기값 PENDING, TT08에서만 변경"]]}]},
+  {id:"TT06",nm:"공개 사고·준사고 PDF 수집",own:"최동욱",st:"closed",dt:"2026-08-21",
+   sum:"62건 원본 PDF의 공식 배포처 URL·로컬 경로·다운로드일·SHA-256을 등록하고 실제 파일과 1:1 대조. RAW_PDF를 변경 불가 원천자료로 선언.",
+   out:[["02_DATA/RAW_PDF (62건)","immutable"],["M02 03_DATA_INVENTORY 62행","QC PASS"]],
+   tables:[{t:"수집 결과",c:["항목","값"],r:[["수집 PDF","62 / 62"],["inventory ↔ 파일 대조","1:1 일치"],["qc_status","TT08까지 PENDING"]]}]},
+  {id:"TT07",nm:"분석표본 선정·CORE/FULL 동결",own:"최동욱",st:"frozen",dt:"2026-08-21",
+   sum:"62건 전수를 분석표본으로 동결하고, 온톨로지 정밀분석용 FULL 3건을 지정.",
+   out:[["M02 04_SAMPLE_SELECTION","v1.0 FROZEN"],["canonical SHA-256","1e742e95…"]],
+   tables:[{t:"표본 구성",c:["수준","건수","보고서"],r:[["CORE","59","나머지 전체"],["FULL","3","KOR_003, KOR_025, KOR_062"],["합계","62",""]]}],
+   gov:"TT17 기록에 'TT07 freeze registry/hash 독립검증 미완료'가 known issue로 남아 있음."},
+  {id:"TT08",nm:"PDF 유형·OCR 필요성 점검",own:"전수련",st:"closed",dt:"—",
+   sum:"공정관리표(Tracker V1)에는 완료로 표시되어 있으나 90_CHANGELOG에 TT08 수행 기록이 없음. 결과 수치를 확인할 근거 파일을 찾지 못함.",
+   out:[["03_DATA_INVENTORY qc_status","기록 확인 필요"]],gov:"CHANGELOG 기록 누락 — 수행 결과 1행 보완 필요."},
+  {id:"TT09",nm:"Python 추출환경·패키지 고정",own:"전수련",st:"closed",dt:"—",
+   sum:"M03에 공식 추출엔진이 pymupdf로 선정되어 있고(selection_status=COMPLETED) M05 requirements가 존재. 다만 90_CHANGELOG에 TT09 행이 없고 엔진 비교 sample_status는 PENDING으로 남아 있음.",
+   out:[["M03 extraction.selected_engine","pymupdf"],["M05_requirements.txt","존재"],["엔진 비교 결과","sample_status=PENDING"]],gov:"CHANGELOG 기록 누락. TT25 인계기록에도 'TT09 환경/version/hash 재검증 필요'가 known issue로 남아 있음."},
+  {id:"TT10",nm:"RAW JSON 스키마 확정",own:"전수련",st:"closed",dt:"2026-08-29",
+   sum:"페이지·블록·좌표 기반 RAW JSON 구조를 정하고, 누락됐던 block_order·block_id 생성 규칙을 M03에 정식 반영.",
+   out:[["M03 extraction.block_identity","v0.2"]],
+   tables:[{t:"RAW JSON 핵심 필드",c:["필드","내용"],r:[["pdf_page / block_no / bbox / raw_text","원문 위치·텍스트 보존"],["block_order","페이지 내 1..N"],["block_id","{report_id}_P{page:03d}_B{order:03d}"]]}],
+   rw:[["08-28","M03에 block_order·block_id 생성 규칙이 없음 (CONFIG_GAP)","08-29 M03 v0.2에 규칙 정식 반영"]]},
+  {id:"TT11",nm:"선정 PDF 일괄 추출",own:"전수련",st:"closed",dt:"2026-08-29",
+   sum:"62건 RAW JSON 생성. TT13 착수 과정에서 block_id·block_order가 전수 누락된 것이 드러나 기존 추출값은 유지한 채 일괄 보완하고 M04에 생성·검증 기능을 추가.",
+   out:[["02_DATA/RAW_JSON (62건)","v1.1로 승격"],["M04_pipeline.py","v0.3 (block ID 생성·검증)"],["M04 validate","PASS"]],
+   rw:[["08-28","M04가 block_id·block_order를 생성하지 않음 → RAW JSON 62건 전수 누락","raw_text·bbox 불변 상태로 backfill, M04 v0.3에 자동 생성·검증 추가"]]},
+  {id:"TT12",nm:"RAW JSON 원문대조 QC",own:"전수련",st:"frozen",dt:"2026-08-28",
+   sum:"보완 전후 62건을 1:1 비교해 기존 내용 불변을 확인한 뒤 RAW JSON Dataset v1.1로 동결. 체크섬 manifest를 최동욱이 독립 재계산.",
+   out:[["RAW JSON Dataset","v1.1 FROZEN"],["SHA256SUMS_RAW_JSON_v1.1.txt","84BFD322…1040AED…"],["누락본","backup 폴더 보존"]],
+   tables:[{t:"재검증 결과",c:["점검","결과"],r:[["page_count·블록 수·raw_text·bbox 불변","62 / 62 PASS"],["block_order 순서·block_id 형식·중복","PASS"],["개별 파일 hash (09-07 재검증)","62 / 62 일치"]]}],
+   rw:[["09-07","91_FREEZE_REGISTRY에 manifest hash가 1글자 틀리게 기록됨 (…1046AED… )","파일 변경 없음 확인, 2인 재계산으로 …1040AED…로 정정 (원기록은 보존)"]]},
+  {id:"TT13",nm:"page 매핑·Provenance 테이블",own:"이동원",st:"frozen",dt:"2026-08-30",
+   sum:"RAW JSON에서 pdf_page·인쇄면 page·섹션·block 범위를 자동 생성하고, 예외 페이지만 원문과 수동 대조해 05_PAGE_MAP을 확정. canonical hash 명령(page-map-hash)으로 동결.",
+   out:[["M02 05_PAGE_MAP","v1.0 FROZEN (8DFD4A90…)"],["M04 page-map / page-map-hash","stable v3.5.1"]],
+   tables:[{t:"자동화 파일럿 (10개 보고서)",c:["분류","페이지"],r:[["대상","495"],["AUTO_CONFIRMED","396"],["REVIEW_SECTION","41"],["REVIEW_PRINTED_PAGE","8"]]},{t:"전체 적용",c:["항목","값"],r:[["보고서","62"],["페이지","3,147"],["수동대조 예외 유형","TOC_MISMATCH, PRINTED_PAGE, MULTI_SECTION, NO_BLOCKS"]]}],
+   rw:[["08-28","착수 시 RAW JSON에 block_id·block_order가 없어 provenance 연결 불가 → BLOCKED","TT11·TT12 보완·재동결 후 재개"]]},
+  {id:"TT14",nm:"Cleaning 규칙·Quality Flag",own:"이동원",st:"frozen",dt:"2026-09-05",
+   sum:"의미를 바꾸지 않는 형식 정규화만 허용하는 정제 규칙을 M03에 정의. FULL 3건 + 추가 3건 사전검토에서 두 차례 보완 후 최동욱 공식 리뷰 PASS, M03 v1.0 동결.",
+   out:[["M01 §6.1 정제 상위원칙","추가"],["M03_CONFIG.yaml cleaning","v1.0 FROZEN (7965BBEC…)"]],
+   tables:[{t:"허용 규칙",c:["규칙","처리 방식"],r:[["Unicode NFKC","㈜·℃·①·분수·자모 등 보호대상 제외"],["줄바꿈 표준화 / 연속공백 정리","표·정렬 영역은 예외"],["반복 header/footer","삭제하지 않고 flag"],["문단 내부 줄바꿈 결합","문단·block 경계 보존"],["영문 dehyphenation","명확한 패턴 + 검토 후만"],["페이지 번호","삭제 금지, is_page_number flag"]]},{t:"금지 규칙 (6)",c:["금지"],r:[["문장 요약"],["동의어 치환"],["누락내용 추론"],["수치 수정"],["부정 표현 삭제"],["공식 조사결론 재분류"]]}],
+   rw:[["09-03","FULL 3건 사전검토: NFKC 구두점 변형, 표 공백축소, 단순 dehyphenation 위험","구두점 보호·표 예외·dehyphenation 자동삭제 금지 추가 (v0.11)"],["09-03","추가 3건 검토: NFKC 보호범위 부족","보호대상을 ㈜·℃·①·분수·자모로 확대 (v0.12) → 09-04 PASS"]]},
+  {id:"TT15",nm:"RAW→CLEANED 자동정제 구현",own:"이동원",st:"review",dt:"2026-09-08",
+   sum:"TT14 규칙대로 M04 정제 기능을 구현하고 62건 전체를 정제. 자동검증 전 항목 0건 오류. 인계 상태가 PENDING_ACCEPTANCE로 남아 있음 (TT16은 이후 동결 완료).",
+   out:[["02_DATA/CLEANED_JSON (62건)","생성"],["CLEANED handoff ZIP","40b3c80b…"],["M03 v1.1 DRAFT / M04 TT15","구현"]],
+   tables:[{t:"정제 결과",c:["항목","값"],r:[["보고서 / 페이지 / 블록","62 / 3,147 / 62,021"],["파일럿 KOR_062","82 p · 541 blocks PASS"],["raw_text 변경","0"],["clean_text 오류","0"],["block_id 누락","0"],["source_passage_id 오류","0"],["MANUAL_REVIEW","0"],["표 형태 블록","853"],["승인된 dehyphenation","7"]]}]},
+  {id:"TT16",nm:"CLEANED JSON 의미보존 검증·동결",own:"전수련",st:"frozen",dt:"2026-09-11",
+   sum:"고정 6개 보고서의 민감 블록을 RAW↔CLEAN 비교해 의미 변경이 없음을 확인하고 CLEANED_DATA v1.0으로 동결. 최동욱이 manifest를 독립 재계산.",
+   out:[["CLEANED_DATA","v1.0 FROZEN"],["SHA256SUMS_CLEANED_JSON_v1.0","FE0FA92C…"]],
+   tables:[{t:"의미보존 검증",c:["점검","결과"],r:[["대상 보고서","KOR_003/025/032/054/059/062"],["민감 블록","30 / 30 FORMAT_ONLY"],["dehyphenation","7 / 7 FORMAT_ONLY"],["의미변경 의심","0"],["정보 손실","0"],["manifest 대조","62 / 62 일치"]]}]},
+  {id:"TT17",nm:"ADREP·CICTT Top-down 매핑",own:"최동욱",st:"frozen",dt:"2026-09-09",
+   sum:"ICAO ADREP/ECCAIRS와 CICTT에서 연구범위 관련 seed만 선별해 코드북에 매핑. 국내 '준사고'는 ICAO Serious incident/Incident에 1:N 복수후보(MAPG001)로 보존.",
+   out:[["M02 10~17_CODEBOOK Top-down","v0.1 FROZEN (8개 artifact)"]],
+   tables:[{t:"등록 seed",c:["구분","개수"],r:[["CASE","3"],["EVENT","7"],["FACTOR","11"],["ATTRIBUTE","6"]]},{t:"국내용어 ↔ 표준 매핑 (21개)",c:["mapping_status","개수"],r:[["EXACT","2"],["PARTIAL","14"],["NONE","5"]]}],
+   rw:[["09-07","EVENT001~007 입력 시 필드 열 정렬 오류","공식 14개 열 schema로 재정렬 (내용 변경 없음)"],["09-09","CASE 매핑그룹·FACTOR standard_role·source ID 일부 잘못 표기","저장상태 재점검 후 정정하고 동결"]],
+   gov:"해시 교차확인은 단일 환경의 계산 검증이며 별도 인간 검토자 서명은 아님 (CHANGELOG 명시)."},
+  {id:"TT18",nm:"Bottom-up 개념·관계 후보",own:"최동욱",st:"closed",dt:"2026-09-09",
+   sum:"FULL 3건(KOR_003·025·062)의 CLEANED_JSON에서 실제 서술된 개념·관계 후보를 근거 passage와 함께 도출. 경계 판단 8건은 TT19로 넘김.",
+   out:[["Bottom-up 후보 + 파일럿 코딩 + 결정로그","v0.1 FROZEN (8개 artifact)"]],
+   tables:[{t:"도출 후보",c:["구분","개수"],r:[["Event","6"],["Finding","3"],["Factor","9"],["Cause","3"],["Recommendation","1"],["Relation","7"],["근거연결 파일럿 코딩","24행"],["OPEN 결정사항 (D001~D008)","8"]]}],
+   gov:"PI 지시에 따른 governance exception으로 진행. TT16 동결 전 착수했고 공동연구자 STEP09 승인 서명은 없음 (CHANGELOG 명시)."},
+  {id:"TT19",nm:"8개 시트 코드북 v0.1",own:"최동욱",st:"closed",dt:"2026-09-09",
+   sum:"8개 코드북 시트에 운영정의·포함/제외 기준·실제 passage 예시·허용값·관계방향을 작성해 Operational Codebook v0.1을 확정. v0.1 원본은 99_ARCHIVE에 보존.",
+   out:[["Operational Codebook","v0.1 FROZEN → SUPERSEDED"],["99_ARCHIVE/M02_…TT19_v0.1_20260909_1108.xlsx","보존본"]],
+   gov:"팀 전원 human review 서명 없이 PI 직접 수행 지시로 동결 (CHANGELOG 명시)."},
+  {id:"TT20",nm:"예비코딩·코드북 v0.2 동결",own:"최동욱",st:"frozen",dt:"2026-09-09",
+   sum:"FULL 3건으로 두 가지 규칙 스트레스 패스를 비교해 모호한 정의를 찾고, D001~D008을 결정해 코드북 v0.2로 동결. 본코딩과 LLM 추출의 기준 코드북.",
+   out:[["Operational Codebook","v0.2 FROZEN (10개 artifact)"],["codebook_hash (M03)","17F7271B…"]],
+   tables:[{t:"파일럿 결과",c:["단계","결과"],r:[["1차 비교 (18쌍)","11 일치 / 7 불일치"],["불일치 그룹","occurrence 매핑, Finding 단위, 관계 대상, 부정 원인, 미규명 원인, 혼합섹션 근거, 관계 방향"],["v0.2 재코딩","7 / 7 수렴"],["결정로그","D001~D008 해결, D009 한계 명시"]]},{t:"v0.2 class code (43개)",c:["상위 유형","코드 수"],r:[["Case","3"],["Event","13"],["Finding","3"],["Factor","20"],["Cause","3"],["Recommendation","1"],["Relation predicate","7 (hasFinding, hasCause, contributedTo, resultedIn, recommendedTo, supportedBy, hasRecommendation)"]]}],
+   rw:[["09-13","작업 워크북이 동결 hash와 달라짐 (8개 중 6개 불일치)","보존된 v0.2 스냅샷에서 복원, 10 / 10 hash 일치 확인"],["09-18","TT27 착수 점검에서 다시 6개 시트 불일치 (14개 셀 공란화)","14개 셀만 복원, 10 / 10 일치 (TT27에서 처리)"]],
+   gov:"두 패스는 AI 규칙 스트레스 테스트이며 인간 코더 간 신뢰도(κ)가 아님 (D009)."},
+  {id:"TT21",nm:"CQ 요구사항·CQ 초안",own:"전수련",st:"frozen",dt:"2026-09-13",
+   sum:"최초 CQ v0.1(10문항)을 작성했으나 불완전 판정을 받아 13개 원자 질문으로 재구성한 v0.2를 동결. 1-hop·2-hop·집계·비교·무응답 유형을 모두 포함.",
+   out:[["M02 30_CQ_MASTER A:L","v0.2 FROZEN (639F8E5A…)"]],
+   tables:[{t:"CQ 유형 분포 (v0.2)",c:["유형","개수","우선순위"],r:[["1_HOP","5","MUST"],["2_HOP","4","MUST"],["NO_ANSWER","2","MUST"],["AGGREGATE","1","MUST"],["COMPARE","1","SHOULD"]]}],
+   rw:[["09-13","v0.1 CQ001~010 (전수련) — 기대답·필요요소가 불완전","최동욱이 13문항으로 재구성해 v0.2 동결"]]},
+  {id:"TT22",nm:"CQ 내부검토·v1.0 동결",own:"전수련",st:"review",dt:"2026-09-13",
+   sum:"처음 동결한 CQ v1.0은 재검증에서 hash가 재현되지 않아 폐기(SUPERSEDED). 13문항 RC1을 다시 만들어 정답후보·근거 passage·SPARQL 패턴까지 붙였고, 이동원·전수련 팀검토를 기다리는 중.",
+   out:[["TT22_CQ_V1.0","SUPERSEDED_REVALIDATION_FAIL"],["TT22_CQ_V1.0_RC1","PENDING_TEAM_REVIEW (8E0A41C5…)"]],
+   tables:[{t:"CQ v1.0-RC1",c:["CQ","질문","유형","팀검토"],r:[["CQ001","KOR_025의 공식 사고원인","1-hop","대기"],["CQ002","KOR_025의 공식 기여요인","1-hop","대기"],["CQ003","KOR_062 braking failure가 초래한 후속 Event","1-hop","대기"],["CQ004","KOR_003의 원인관련 공식 Finding","1-hop","대기"],["CQ005","KOR_003 사고에 기여한 Factor","1-hop","대기"],["CQ006","KOR_025 안전권고의 조치대상 조직","2-hop","대기"],["CQ007","KOR_062 안전권고의 조치대상 조직","2-hop","대기"],["CQ008","KOR_025에서 기상은 positive Cause인가 (→ false)","무응답","대기"],["CQ009","'근본원인 미규명' 문장은 positive Cause인가 (→ false)","무응답","대기"],["CQ010","KOR_025 공식 Cause의 근거 passage","2-hop","대기"],["CQ011","KOR_003 Factor + 같은 Case의 Finding","2-hop","대기"],["CQ012","FULL 3건의 안전권고 개수 (→ 2)","집계","대기"],["CQ013","KOR_025 vs KOR_062 권고 대상 조직 비교","비교","대기"]]}],
+   rw:[["09-13","CQ v1.0(10문항) 동결 hash가 현재 시트에서 재현되지 않음 + TT20 코드북 drift 발견 → BLOCKED","TT20 복원·TT21 재동결 후 RC1 재작성, 팀검토 대기 상태로 등록"]],
+   gov:"CQ003·007·012·013은 KOR_062를 대상으로 하는데, Human Gold(TT24) 10건에는 KOR_062가 제외됨."},
+  {id:"TT23",nm:"본코딩 작업분장·보고서 배정",own:"최동욱",st:"closed",dt:"2026-09-14",
+   sum:"한국어 보고서 10건을 표본으로 고정하고 3인이 CODE·RELATION·NOTE 세 칸만 독립 코딩하는 패킷을 배포. 영문 보고서 KOR_062는 제외하고 8건은 고정 난수(seed 20260913)로 선정.",
+   out:[["TT23 코딩방법 및 TT24 일치도 절차 (pptx/pdf)","09-13"],["T23_CODING_CDW_FINAL.xlsx (최동욱 코딩본)","09-14"]],
+   tables:[{t:"본코딩 표본",c:["보고서","구분","페이지","코딩 Unit","한국어 비중"],r:[["KOR_003","기존 FULL","61","747","75.3%"],["KOR_025","기존 FULL","73","928","75.2%"],["KOR_008","난수 선정","57","654","68.7%"],["KOR_042","난수 선정","44","591","83.6%"],["KOR_053","난수 선정","55","677","91.3%"],["KOR_014","난수 선정","33","522","80.1%"],["KOR_016","난수 선정","41","414","62.6%"],["KOR_055","난수 선정","45","344","86.7%"],["KOR_059","난수 선정","45","642","73.0%"],["KOR_054","난수 선정","108","1,443","77.8%"],["합계","","562","6,962",""]]},{t:"코딩 선택지",c:["칸","값"],r:[["CODE","CASE / EVENT / FINDING / FACTOR / CAUSE / RECOMMENDATION / NA / ?"],["RELATION","YES / NO / ?"],["NOTE","필요할 때만"]]}],
+   gov:"90_CHANGELOG에 TT23 행이 없음. 위 내용은 TT23 코딩 패킷 파일에서 확인."},
+  {id:"TT24",nm:"본코딩·코더 일치도·Gold 동결",own:"전수련",st:"frozen",dt:"2026-09-15",
+   sum:"3인 독립코딩 후 일치도를 산출하고, 불일치 전부를 4대 기준으로 재판정해 Human Gold v1.0(6,962 Unit)을 동결. 45건은 공동저자 3인 온라인 합의로 확정.",
+   out:[["04_RESULTS/TT24_HUMAN_GOLD_FINAL_v1.0.xlsx","v1.0 FROZEN (C85F43CB…)"],["M02 40_RESULTS_MASTER TT24_R001~R009","FINAL"]],
+   tables:[{t:"조정 전 3인 일치도",c:["지표","일치율","Fleiss κ"],r:[["CODE","44.43% (3,093/6,962)","0.261"],["RELATION","68.4% (4,762/6,962)","0.311"],["CODE+RELATION","39.28% (2,735/6,962)","—"]]},{t:"조정 결과",c:["항목","건수"],r:[["CODE 불일치 재판정","3,869"],["RELATION 불일치 재판정","2,200"],["3인 온라인 합의","45"],["미해결","0"]]},{t:"Human Gold 분포",c:["GOLD_CODE","Unit","RELATION=YES"],r:[["NA","3,621","44"],["EVENT","1,539","240"],["FINDING","1,532","297"],["RECOMMENDATION","99","30"],["CAUSE","92","84"],["FACTOR","60","38"],["CASE","19","5"],["합계","6,962","738"]]}],
+   gov:"이동원 코딩본은 AI 보조 전수검토를 포함하므로 순수 독립 인간코딩으로 해석하지 않는다고 CHANGELOG에 명시됨."},
+  {id:"TT25",nm:"LLM 비교평가 프로토콜",own:"이동원",st:"frozen",dt:"2026-09-18",
+   sum:"동일 코드북·입력·prompt·schema 조건의 3모델 비교 설계와 15개 고정 테스트셋(TEST_v1.0)을 확정. 최동욱 독립검토 PASS 후 v1.0 동결.",
+   out:[["M02 31_LLM_EVALUATION 계획행 + M03 llm.benchmark","v1.0 FROZEN (20A98E00…)"],["TT25_REVIEW_LOG_20260918_CDW_PASS.md","PASS"]],
+   tables:[{t:"후보 모델",c:["Provider","model_id","sampling"],r:[["OpenAI","gpt-5.6-terra","temperature 0"],["Anthropic","claude-sonnet-5","기본값 (미지원 파라미터 생략)"],["Google","gemini-3.8-flash","temperature 0, seed 42"]]},{t:"평가 지표",c:["지표"],r:[["Entity / Relation precision·recall·F1"],["Schema valid rate · Evidence accuracy"],["Latency · Cost"],["오류유형: missed_entity, wrong_type, spurious_entity, wrong_relation, wrong_direction, unsupported_evidence, schema_failure"]]}]},
+  {id:"TT26",nm:"API 환경·보안키·클라이언트",own:"이동원",st:"closed",dt:"2026-09-18",
+   sum:"Python 3.13.15 가상환경에 SDK 버전을 고정하고, 프로젝트 전용 환경변수로 키를 관리. 3개 provider 실제 호출 smoke test 모두 성공.",
+   out:[["M05 requirements (SDK pin)","고정"],["M03 llm.providers","3-provider"],["36_LLM_RUN_MANIFEST SMOKE 3행","APPROVED"]],
+   tables:[{t:"실행환경",c:["항목","값"],r:[["Python","3.13.15"],["openai / anthropic / google-genai","3.14.1 / 1.6.0 / 2.24.0"],["pydantic / python-dotenv","2.13.5 / 1.2.3"],["secret scan (132개 파일)","0건"],["smoke test","3 / 3 SUCCESS"],["retry","최대 3회, 2s→30s, 429/5xx만"]]}]},
+  {id:"TT27",nm:"Prompt·Structured Schema",own:"이동원",st:"closed",dt:"2026-09-18",
+   sum:"코드북 v0.2를 prompt에 묶고 Pydantic 구조화 schema와 근거 검증기를 구현. 테스트셋과 분리된 합성 예시 10건 실제 API 개발검증 10/10 PASS 후 v1.0 동결.",
+   out:[["Prompt v1.0","FROZEN (353F24CA…)"],["Schema v1.0","FROZEN (755EC936…)"],["M04 validate_extraction","구현"]],
+   tables:[{t:"개발 단계 결과",c:["단계","결과"],r:[["few-shot","합성 POSITIVE 2 + NEGATIVE 3 (테스트셋 누출 0)"],["Validator self-test","정상 PASS, 잘못된 근거·참조·코드 모두 거부"],["실제 API 개발검증","10 / 10 PASS, 필수필드 누락 0"],["hash 독립 재계산","최동욱 64자리 일치"]]}],
+   rw:[["09-18","STEP01 선행점검에서 TT20 코드북 6개 시트 hash 불일치 (14개 셀 공란) → BLOCKED","동결 스냅샷에서 14개 셀만 복원, 10 / 10 일치 후 재개"]]},
+  {id:"TT28",nm:"Batch 추출·JSONL 생성·검수",own:"이동원",st:"closed",dt:"2026-09-20",
+   sum:"Human Gold와 같은 550개 passage를 gpt-5.6-terra로 추출. v1.0 전체실행이 QC에서 실패해 prompt·schema를 두 차례 고친 뒤(v1.1 → v1.2) 다시 실행. 최종 550건 중 516건 SUCCESS, 34건 INVALID_EVIDENCE를 원본 그대로 동결.",
+   out:[["M06_llm_results.jsonl","v1.2 FROZEN (3C137792…, 1,176행)"],["Run manifest RUN_20260919_OPENAI_V12_001","FROZEN (B73E0CFD…, 581 attempt)"],["Prompt v1.2 / Schema v1.1","FROZEN"],["TT28_STEP12_RECALC.py","독립 재계산 스크립트"]],
+   tables:[{t:"배치 실행 이력",c:["배치","일자","Prompt/Schema","대상","SUCCESS","INVALID_SCHEMA","INVALID_EVIDENCE","판정"],r:[["Pilot v1.0","09-18","v1.0/v1.0","15","14","0","1","GO"],["Full v1.0","09-18","v1.0/v1.0","550","525","6","19","QC FAIL"],["Pilot v1.1","09-19","v1.1/v1.1","15","4","0","11","NO-GO"],["Full v1.1","—","v1.1/v1.1","550","—","—","—","미실행"],["Pilot v1.2","09-19","v1.2/v1.1","15","13","0","2","GO"],["Full v1.2 (최종)","09-19~20","v1.2/v1.1","550","516","0","34","FROZEN"]],hl:5,bad:[1,2]},{t:"최종 결과 (v1.2)",c:["항목","값"],r:[["성공률","516 / 550 (93.8%)"],["검증 오류","EVIDENCE_NOT_IN_INPUT 59건 (전부 원문 띄어쓰기 보정·비연속 결합)"],["평균 지연","6,827.9 ms"],["추가 재호출","금지 (attempt 1~6 전부 보존)"]]}],
+   rw:[["09-18","manifest 생성기가 CLEANED_JSON 파일명을 잘못 가정 → 실행 실패","파일 내부 report_id로 찾도록 수정 (API 호출 0)"],["09-18","생성기에서 NameError (import 누락) → 실행 실패","import·helper 수정 후 550행 생성 PASS"],["09-18","Full v1.0 QC FAIL: 없는 class code 사용(INVALID_SCHEMA 6), Factor·Cause 추출 0건 (Gold는 각 44·52 passage)","원인: prompt에 43개 코드 목록 미전달·schema 무제약 → CR_01로 v1.1 (코드 목록 + enum)"],["09-19","Pilot v1.1 NO-GO: 근거가 block 경계를 넘었다는 오류 78건","원인: API 입력에 없는 block 경계를 검증기가 강제 → CR_02로 v1.2 (경계 조건 제거)"],["09-19","Full v1.2 중 4건이 429 'API 크레딧 소진'으로 attempt 1~5 실패","크레딧 충전 후 승인된 4건만 attempt 6 실행 → 3 SUCCESS, 1 INVALID_EVIDENCE"]]},
+  {id:"TT29",nm:"LLM vs Human Gold 성능·오류분석",own:"이동원",st:"next",dt:"—",
+   sum:"31_LLM_EVALUATION의 P/R/F1·evidence accuracy 칸이 모두 PENDING_TT29. 입력은 동결된 M06(v1.2)과 Human Gold v1.0.",
+   out:[["31_LLM_EVALUATION 성능지표","PENDING"],["논문 표 11 (Model 1~3)","빈 표"]],
+   tables:[{t:"넘겨받은 분석 대상",c:["항목","값"],r:[["INVALID_EVIDENCE","34건"],["EVIDENCE_NOT_IN_INPUT","59건"],["Pilot 검토 후보","wrong_type / spurious_entity / wrong_relation"],["비교 모델","본실행은 gpt-5.6-terra 1개 (나머지 2개는 smoke test만)"]]}]},
+  {id:"TT30",nm:"코드북→RDF Triple 매핑 명세",own:"이동원",st:"todo",dt:"—",sum:"32_RDF_MAPPING 시트가 비어 있음.",out:[["M02 32_RDF_MAPPING","미작성"]]},
+  {id:"TT31",nm:"Namespace·IRI·Provenance 규칙",own:"이동원",st:"next",dt:"—",
+   sum:"TT24·TT28 인계기록이 모두 TT31을 다음 단계로 지정. 입력은 동결 M06·manifest(RUN_20260919_OPENAI_V12_001)와 Human Gold v1.0.",
+   out:[["M03 rdf.base_iri","example.org 임시값"],["Namespace/IRI","PENDING (M01 §12)"]],
+   tables:[{t:"인계된 요구사항",c:["출처","내용"],r:[["TT22","CQ003·CQ009·CQ010의 Case–Event RDF 매핑 요건"],["TT28","기존 TT28 결과 수정 금지, 동결 M06/manifest만 입력"],["M03 provenance","report_id·source_passage_id·pdf_page·evidence_text 필수, PROV-O 정렬"]]}]},
+  {id:"TT32",nm:"RDF/OWL 변환·TTL/OWL 생성",own:"이동원",st:"todo",dt:"—",sum:"M07_ontology.owl, M08_knowledge_data.ttl 미생성.",out:[["M07 / M08","미생성"]]},
+  {id:"TT33",nm:"Protégé OWL 로딩·구조 검토",own:"전수련",st:"todo",dt:"—",sum:"33_PROTEGE_VALIDATION 시트 비어 있음.",out:[["M02 33_PROTEGE_VALIDATION","미작성"]]},
+  {id:"TT34",nm:"대표 FULL 사례 Individual 로딩",own:"전수련",st:"todo",dt:"—",sum:"",out:[]},
+  {id:"TT35",nm:"HermiT 논리검증",own:"전수련",st:"todo",dt:"—",sum:"",out:[]},
+  {id:"TT36",nm:"Metrics·버전동결·GraphDB 이관 준비",own:"전수련",st:"todo",dt:"—",sum:"",out:[]},
+  {id:"TT37",nm:"GraphDB 적재·지식그래프 생성",own:"전수련",st:"todo",dt:"—",sum:"",out:[]},
+  {id:"TT38",nm:"CQ→SPARQL 기능검증",own:"전수련",st:"todo",dt:"—",sum:"M09_sparql_queries.rq와 34_SPARQL_RESULTS가 비어 있음. CQ는 TT22 RC1 확정이 선행 조건.",out:[["M09 / 34_SPARQL_RESULTS","미생성"]]},
+  {id:"TT39",nm:"전문가 Delphi/내용타당성",own:"전수련",st:"todo",dt:"—",sum:"Delphi 패널·합의기준이 M01 §12에서 PENDING.",out:[["M02 35_EXPERT_VALIDATION","미작성"]]},
+  {id:"TT40",nm:"결과 통합·논문·재현성 패키지",own:"최동욱",st:"todo",dt:"—",sum:"원고 초안은 V7(09-17)까지 진행. 4.4 이후 결과와 RQ2·RQ3 답변이 비어 있음.",out:[["04_RESULTS 초안 V1~V7","09-15~09-17"],["M10_manuscript.docx","09-09"]]}
   ],
   metrics: [
     ["분석대상 보고서","검토 326건 중 포함기준 충족","62건"],
     ["표본 구성","TT07 동결","CORE 59 · FULL 3"],
     ["PDF 페이지 / 블록","PAGE_MAP · CLEANED_JSON","3,147 p · 62,021 blk"],
-    ["코드북","8개 시트, TT20","v0.2 FROZEN"],
-    ["Competency Question","TT22","13개 · v1.0"],
-    ["Human Gold","10개 보고서, 불일치 전수 조정","6,962 UNIT"],
+    ["코드북","8개 시트, 43개 class code","v0.2 FROZEN"],
+    ["Competency Question","TT22 RC1, 팀검토 대기","13개"],
+    ["Human Gold","10개 보고서, 불일치 전수 조정","6,962 Unit"],
     ["CODE 3인 일치 / Fleiss κ","조정 전 독립코딩","44.43% · 0.261"],
     ["RELATION 3인 일치 / Fleiss κ","조정 전 독립코딩","68.4% · 0.311"],
-    ["LLM Full 추출 성공","550 passage, v1.2","516 (93.8%)"]
+    ["LLM 최종 추출 성공","550 passage, Prompt v1.2","516 (93.8%)"]
   ],
   issues: [
-    ["h","공정관리표(Tracker V1)가 실제와 다름","Tracker 기준일 08-19에 멈춰 TT21~TT40을 미착수로 표시. 00_DASHBOARD 전체 공정률이 5000.0%로 표시되는 수식 오류도 있음. 이 판으로 대체하거나 Tracker H열 갱신 필요."],
-    ["h","3모델 비교 설계 vs 1모델 실행","TT25 프로토콜·RG03·원고 표 11은 3개 모델(gpt-5.6-terra / claude-sonnet-5 / gemini-3.8-flash) 비교를 전제. TT28 본실행은 OpenAI 1개 모델뿐이고 나머지는 smoke test만 존재. TT29에서 비교 범위 결정 필요."],
-    ["m","미결 인수·검토 2건","TT04 HANDOFF=REVIEW_REQUIRED, TT15 HANDOFF=PENDING_ACCEPTANCE. 후속 Task는 진행됐으나 공식 수용 기록이 없음."],
-    ["m","CHANGELOG 누락 3건","TT08·TT09·TT23은 90_CHANGELOG에 행이 없음 (M01 규칙: Task당 1행 기록)."],
-    ["m","CQ 팀검토 칸 PENDING","30_CQ_MASTER tt22_team_review가 13개 CQ 모두 '이동원=PENDING; 전수련=PENDING'. 원고 4.2에도 '[추후 삽입: TT22 최종 팀 검토 결과]'."],
-    ["l","일정표 미반영","일정표_0917.png는 이미지라 내용을 읽지 못함. 마감일은 이 판에 들어 있지 않음."]
-  ],
-  runs: [
-    ["Pilot v1.0","09-18","v1.0 / v1.0","15","14","0","1","—"],
-    ["Full v1.0","09-18","v1.0 / v1.0","550","525","6","19","QC_BLOCKED"],
-    ["Pilot v1.1","09-18","v1.1 / v1.1","15","4","0","11","NO_GO (cross-block 78)"],
-    ["Full v1.1","09-18","v1.1 / v1.1","550","—","—","—","PLANNED 550행만 있음 · 미실행"],
-    ["Pilot v1.2","09-19","v1.2 / v1.1","15","13","0","2","GO"],
-    ["Full v1.2 (최종)","09-19~20","v1.2 / v1.1","550","516","0","34","FROZEN"]
+    ["h","공정관리표(Tracker V1)가 실제와 다름","기준일 08-19에 멈춰 TT21~TT40을 미착수로 표시. 00_DASHBOARD 전체 공정률도 수식 오류로 5000.0%. 이 판으로 대체하거나 Tracker H열 갱신 필요."],
+    ["h","3모델 비교 설계 vs 1모델 실행","TT25 프로토콜·RG03·원고 표 11은 3개 모델 비교가 전제. TT28 본실행은 gpt-5.6-terra 1개뿐, 나머지는 smoke test만 존재. TT29에서 범위 결정 필요."],
+    ["h","CQ v1.0이 아직 확정되지 않음","처음 동결본은 재검증 실패로 폐기. RC1 13문항의 이동원·전수련 팀검토(PASS/REVISE/DROP)가 남아 있음. 원고 4.2에도 자리표시."],
+    ["m","CQ 대상과 Gold 표본 불일치","CQ003·007·012·013은 KOR_062를 묻는데, Human Gold 10건에는 영문 보고서 KOR_062가 제외됨. TT31/TT38에서 KOR_062 데이터 출처 결정 필요."],
+    ["m","TT29와 TT31 순서","TT28 인계기록은 다음 단계를 TT31로 지정. Task Card 순서상 TT29·TT30이 먼저."],
+    ["m","미결 인수·검토 2건","TT04 = REVIEW_REQUIRED, TT15 = PENDING_ACCEPTANCE. 후속 Task는 진행됐으나 공식 수용 기록 없음."],
+    ["m","CHANGELOG 누락 3건","TT08·TT09·TT23은 90_CHANGELOG에 행이 없음 (M01 규칙: Task당 1행)."],
+    ["l","코드북 워크북 drift 재발","TT20 동결 코드북이 09-13, 09-18 두 번 작업본에서 어긋남. 매 Task 시작 시 hash 재확인 필요."],
+    ["l","일정표 미반영","일정표_0917.png는 이미지라 내용을 읽지 못함. 마감일은 이 판에 없음."]
   ],
   timeline: [
     ["09-20","TT28 M06 v1.2 FROZEN · CLOSED (최동욱 독립 재계산 일치)"],
-    ["09-19","TT28 Prompt v1.2 FROZEN, Full 550 실행"],
+    ["09-19","TT28 Prompt v1.2 FROZEN, Full 550 재실행"],
     ["09-18","TT25 프로토콜 v1.0 · TT26 환경 · TT27 Prompt/Schema v1.0"],
     ["09-15","TT24 Human Gold v1.0 FROZEN"],
-    ["09-13","TT21 CQ v0.2 · TT22 CQ v1.0 FROZEN"],
+    ["09-13","TT21 CQ v0.2 FROZEN · TT22 RC1 팀검토 대기"],
     ["09-11","TT16 CLEANED 데이터 FROZEN"],
     ["09-09","TT17~TT20 코드북 v0.2 FROZEN"],
     ["09-05","TT14 M03_CONFIG v1.0 FROZEN"]
@@ -301,57 +455,87 @@ const DATA = {
 
 /* ---------- render ---------- */
 const $=s=>document.querySelector(s);
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const PROG={frozen:100,closed:100,review:90,next:0,todo:0};
 const LABEL={frozen:"FROZEN",closed:"CLOSED",review:"검토대기",next:"다음",todo:"미착수"};
+const T=DATA.tasks;
 
 $("#asof").textContent=DATA.asof;
+$("#purpose").innerHTML=DATA.research.purpose;
+$("#rqs").innerHTML=DATA.research.rqs.map(r=>`<div class="rq"><div class="top"><span class="id mono">${esc(r[0])}</span></div><div class="q">${esc(r[1])}</div><div class="m">방법: ${esc(r[2])}</div><div class="st">${esc(r[3])}</div></div>`).join("");
+$("#dlnote").textContent=DATA.research.dlnote;
 $("#team").textContent=DATA.team;
 
-const T=DATA.tasks;
-const total=T.reduce((a,t)=>a+PROG[t[3]]*2.5/100,0);
+const total=T.reduce((a,t)=>a+PROG[t.st]*2.5/100,0);
 $("#pct").innerHTML=total.toFixed(1)+"<small>%</small>";
 const c={done:0,review:0,next:0,todo:0};
-T.forEach(t=>{const s=t[3];if(s==="frozen"||s==="closed")c.done++;else c[s]++;});
-$("#bar").innerHTML=
- `<i style="width:${c.done*2.5}%;background:var(--done)"></i><i style="width:${c.review*2.5}%;background:var(--review)"></i><i style="width:${c.next*2.5}%;background:var(--active)"></i>`;
-$("#counts").innerHTML=
- `<span><span class="dot" style="background:var(--done)"></span>완료 ${c.done}</span><span><span class="dot" style="background:var(--review)"></span>검토대기 ${c.review}</span><span><span class="dot" style="background:var(--active)"></span>다음 ${c.next}</span><span><span class="dot" style="background:var(--todo)"></span>미착수 ${c.todo}</span>`;
+T.forEach(t=>{if(t.st==="frozen"||t.st==="closed")c.done++;else c[t.st]++;});
+const nRw=T.filter(t=>t.rw&&t.rw.length).length;
+$("#bar").innerHTML=`<i style="width:${c.done*2.5}%;background:var(--done)"></i><i style="width:${c.review*2.5}%;background:var(--review)"></i><i style="width:${c.next*2.5}%;background:var(--active)"></i>`;
+$("#counts").innerHTML=`<span><span class="dot" style="background:var(--done)"></span>완료 ${c.done}</span><span><span class="dot" style="background:var(--review)"></span>검토대기 ${c.review}</span><span><span class="dot" style="background:var(--active)"></span>다음 ${c.next}</span><span><span class="dot" style="background:var(--todo)"></span>미착수 ${c.todo}</span><span><span class="dot" style="background:var(--risk)"></span>재작업 이력 ${nRw}</span>`;
 $("#now").innerHTML=`<div class="eyebrow">지금 할 일 · <span class="mono">${esc(DATA.now.task)}</span></div><div class="t">${esc(DATA.now.title)}</div><p>${esc(DATA.now.text)}</p>`;
 
-const curPhase=Math.floor(T.findIndex(t=>t[3]==="next")/4);
+const curPhase=Math.floor(T.findIndex(t=>t.st==="next")/4);
 $("#phases").innerHTML=DATA.phases.map((nm,i)=>{
   const g=T.slice(i*4,i*4+4);
-  const p=g.reduce((a,t)=>a+PROG[t[3]],0)/4;
+  const p=g.reduce((a,t)=>a+PROG[t.st],0)/4;
   const cls=p===100?"done":p>0?"part":"";
   return `<div class="ph ${cls} ${i===curPhase?"cur":""}"><span class="n mono">${i+1}단계 · TT${String(i*4+1).padStart(2,"0")}–${String(i*4+4).padStart(2,"0")}</span><span class="nm">${esc(nm)}</span><span class="pc mono">${p.toFixed(1)}%</span></div>`;
 }).join("");
 
 let html="";
 T.forEach((t,i)=>{
-  if(i%4===0){const ph=i/4;html+=`<div class="phlabel"><span>${ph+1}단계 · ${esc(DATA.phases[ph])}</span></div>`;}
-  const [id,nm,own,st,dt,,flag]=t;
-  html+=`<button class="task s-${st}" id="task-${id}" data-i="${i}" type="button">
-    <span class="row"><span class="id mono">${id}</span><span class="pill p-${st}">${LABEL[st]}</span></span>
-    <span class="nm">${esc(nm)}</span>
-    <span class="row"><span class="own">${esc(own)}</span><span class="own mono">${esc(dt)}${flag?' <span class="flag" title="CHANGELOG 기록 없음">●</span>':""}</span></span>
+  if(i%4===0){const ph=i/4;html+=`<div class="phlabel">${ph+1}단계 · ${esc(DATA.phases[ph])}</div>`;}
+  const rw=t.rw&&t.rw.length?`<span class="pill p-rework" title="처음 시도에서 오류">재작업 ${t.rw.length}</span>`:"";
+  html+=`<button class="task s-${t.st}" id="task-${t.id}" data-i="${i}" type="button" aria-expanded="false">
+    <span class="row"><span class="id mono">${t.id}</span><span class="pills">${rw}<span class="pill p-${t.st}">${LABEL[t.st]}</span></span></span>
+    <span class="nm">${esc(t.nm)}</span>
+    <span class="row"><span class="own">${esc(t.own)}</span><span class="own mono">${esc(t.dt)}</span></span>
   </button>`;
 });
 $("#board").innerHTML=html;
-$("#board").addEventListener("click",e=>{
-  const b=e.target.closest(".task");if(!b)return;
-  const t=T[+b.dataset.i];const d=$("#detail");
-  d.innerHTML=`<dt>Task</dt><dd class="mono">${t[0]}</dd><dt>업무</dt><dd>${esc(t[1])}</dd><dt>주담당</dt><dd>${esc(t[2])}</dd><dt>상태</dt><dd>${LABEL[t[3]]} · ${esc(t[4])}</dd><dt>근거</dt><dd>${esc(t[5]||"기록 없음")}</dd>`;
-  d.hidden=false;
-});
+
+function table(tb){
+  const bad=new Set(tb.bad||[]);
+  const head=`<thead><tr>${tb.c.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead>`;
+  const body=tb.r.map((row,ri)=>{
+    const cls=ri===tb.hl?"hl":bad.has(ri)?"bad":"";
+    return `<tr class="${cls}">${row.map(v=>{const s=String(v);const num=/^[\d,.\s%/()—~-]+$/.test(s)&&/\d/.test(s);return `<td class="${num?"num":""}">${esc(v)}</td>`;}).join("")}</tr>`;
+  }).join("");
+  return `<div class="tbl"><table>${head}<tbody>${body}</tbody></table></div>`;
+}
+
+let openIdx=-1;
+function closeDetail(){const d=document.querySelector(".detail");if(d)d.remove();document.querySelectorAll(".task.open").forEach(x=>{x.classList.remove("open");x.setAttribute("aria-expanded","false");});openIdx=-1;}
+function openTask(i,scroll){
+  if(openIdx===i){closeDetail();return;}
+  closeDetail();
+  const t=T[i];const btn=document.getElementById("task-"+t.id);
+  let b="";
+  b+= t.sum?`<p class="sum">${esc(t.sum)}</p>`:`<p class="empty">아직 수행 기록이 없습니다.</p>`;
+  if(t.rw&&t.rw.length) b+=`<div class="rework"><h3>처음 시도에서 발생한 오류와 조치</h3>${table({c:["일자","처음 시도의 문제","조치·결과"],r:t.rw})}</div>`;
+  if(t.out&&t.out.length) b+=`<div class="blk"><h3>주요 산출물</h3>${table({c:["산출물","버전·상태"],r:t.out})}</div>`;
+  (t.tables||[]).forEach(tb=>{b+=`<div class="blk"><h3>${esc(tb.t)}</h3>${table(tb)}</div>`;});
+  if(t.gov) b+=`<div class="gov">${esc(t.gov)}</div>`;
+  const d=document.createElement("div");d.className="detail";d.id="detail-"+t.id;d.setAttribute("role","region");d.setAttribute("aria-label",t.id+" 상세");
+  d.innerHTML=`<div class="dh"><div><div class="eyebrow mono">${t.id} · ${Math.floor(i/4)+1}단계 ${esc(DATA.phases[Math.floor(i/4)])}</div><h2>${esc(t.nm)}</h2><div class="meta"><span class="pill p-${t.st}">${LABEL[t.st]}</span>${t.rw&&t.rw.length?`<span class="pill p-rework">재작업 ${t.rw.length}회</span>`:""}<span>주담당 ${esc(t.own)}</span><span class="mono">${esc(t.dt)}</span></div></div><button class="x" type="button" aria-label="닫기">×</button></div><div class="db">${b}</div>`;
+  btn.after(d);btn.classList.add("open");btn.setAttribute("aria-expanded","true");openIdx=i;
+  d.querySelector(".x").addEventListener("click",()=>{closeDetail();btn.focus();});
+  if(scroll) btn.scrollIntoView({block:"start",behavior:"smooth"});
+}
+$("#board").addEventListener("click",e=>{const b=e.target.closest(".task");if(b)openTask(+b.dataset.i,false);});
+
+/* 재작업 전체 표 */
+const all=[];T.forEach((t,i)=>(t.rw||[]).forEach(r=>all.push([t.id,i,...r])));
+$("#reworkAll").innerHTML=`<thead><tr><th>Task</th><th>일자</th><th>처음 시도의 문제</th><th>조치·결과</th></tr></thead><tbody>`+
+  all.map(r=>`<tr><td><button class="task-link pill p-rework mono" data-i="${r[1]}" type="button" style="all:unset;cursor:pointer;font-family:'IBM Plex Mono',monospace;color:var(--risk);font-weight:500;text-decoration:underline">${r[0]}</button></td><td class="mono">${esc(r[2])}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td></tr>`).join("")+"</tbody>";
+$("#reworkAll").addEventListener("click",e=>{const b=e.target.closest("[data-i]");if(b)openTask(+b.dataset.i,true);});
 
 $("#metrics").innerHTML=DATA.metrics.map(m=>`<div class="k">${esc(m[0])}<small>${esc(m[1])}</small></div><div class="v mono">${esc(m[2])}</div>`).join("");
 const SEV={h:"우선",m:"보통",l:"참고"};
 $("#issues").innerHTML=DATA.issues.map(x=>`<li><span class="sev ${x[0]}">${SEV[x[0]]}</span><div><b>${esc(x[1])}</b><p>${esc(x[2])}</p></div></li>`).join("");
-$("#runs").innerHTML=`<thead><tr><th>배치</th><th>일자</th><th>Prompt / Schema</th><th class="num">대상</th><th class="num">SUCCESS</th><th class="num">INVALID_SCHEMA</th><th class="num">INVALID_EVIDENCE</th><th>판정</th></tr></thead><tbody>`+
- DATA.runs.map(r=>`<tr><td>${esc(r[0])}</td><td class="mono">${r[1]}</td><td class="mono">${r[2]}</td>${r.slice(3,7).map(v=>`<td class="num mono">${v}</td>`).join("")}<td>${esc(r[7])}</td></tr>`).join("")+"</tbody>";
 $("#timeline").innerHTML=DATA.timeline.map(x=>`<li><span class="d mono">${x[0]}</span>${esc(x[1])}</li>`).join("");
 $("#paper").innerHTML=DATA.paper.map(p=>`<div class="k">${esc(p[0])}<small>${esc(p[1])}</small></div><div class="v mono">${esc(p[2])}</div>`).join("");
 $("#papernote").textContent=DATA.papernote;
-$("#foot").innerHTML=`출처 파일: <code>01_MASTER/M02_RESEARCH_MASTER.xlsx</code> (09-20 00:52) · <code>M03_CONFIG.yaml</code> (09-19) · <code>M01_RESEARCH_MASTER.docx</code> · <code>03_RESEARCH/TT25_REVIEW_LOG</code> · <code>TT28_*</code> · <code>04_RESULTS/…초안_V7.pdf</code> · Task Tracker V1. 공정률은 Tracker 규칙(완료 100 · 검토중 90 · 미착수 0, Task당 2.5%)으로 계산.`;
+$("#foot").innerHTML=`출처 파일: <code>01_MASTER/M02_RESEARCH_MASTER.xlsx</code> (09-20) · <code>M03_CONFIG.yaml</code> · <code>M01_RESEARCH_MASTER.docx</code> · <code>T23_CODING_CDW_FINAL.xlsx</code> · <code>04_RESULTS/TT24_HUMAN_GOLD_FINAL_v1.0.xlsx</code> · <code>03_RESEARCH/TT25_REVIEW_LOG</code> · <code>TT28_*</code> · <code>04_RESULTS/…초안_V7.pdf</code>. 공정률 = 완료 100 · 검토대기 90 · 그 외 0, Task당 2.5%.`;
 </script>
