@@ -48,4 +48,4 @@ with st.container(border=True):
 
 # ---- 진행상황판 --------------------------------------------------------------
 html = (BASE / "dashboard.html").read_text(encoding="utf-8")
-components.html(html, height=5200, scrolling=True)
+components.html(html, height=6000, scrolling=True)

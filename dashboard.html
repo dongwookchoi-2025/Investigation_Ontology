@@ -120,6 +120,19 @@ footer code{font-family:"IBM Plex Mono",monospace;font-size:11.5px}
 .rq .m{font-size:12.5px;color:var(--muted)}
 .rq .st{font-size:12.5px;border-top:1px dashed var(--line);padding-top:6px}
 @media (max-width:900px){.rqs{grid-template-columns:1fr}}
+.apx-tools{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:8px}
+.apx-tools input{flex:1 1 220px;min-width:0;font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.apx-tools input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{all:unset;cursor:pointer;font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.apx-count{font-size:12px;color:var(--muted);margin-bottom:6px}
+.apx{max-height:560px;overflow:auto;border:1px solid var(--line);border-radius:6px}
+.apx th{position:sticky;top:0;background:var(--panel);z-index:1}
+.apx td{white-space:nowrap}
+.apx .kind-사고{color:var(--risk);font-weight:500}
+.apx .dup{background:var(--review-soft)}
 /* inline detail */
 .detail{grid-column:1/-1;border:1px solid var(--accent);border-radius:8px;background:var(--panel);box-shadow:0 2px 10px rgba(15,21,28,.08);overflow:hidden}
 .task.open{background:var(--accent-soft);border-color:var(--accent)}
@@ -230,6 +243,17 @@ dialog::backdrop{background:var(--shade)}
       <p class="note" id="papernote"></p>
     </section>
   </div>
+
+  <section aria-label="부록 A 대응표" id="appendixSec">
+    <h2>부록 A. 연구대상 조사보고서와 연구 식별자 대응표</h2>
+    <p class="note" style="margin:0 0 12px">논문 초안 V7 부록 A 기준. HC = 본코딩(Human Gold) 대상 10건, FULL = 정밀분석 대상 3건.</p>
+    <div class="apx-tools">
+      <input id="apxQ" type="search" placeholder="KOR 번호, 보고서 번호, 기종 검색" aria-label="대응표 검색">
+      <div class="chips" id="apxChips" role="group" aria-label="필터"></div>
+    </div>
+    <div class="apx-count" id="apxCount"></div>
+    <div class="tbl apx"><table id="apx"></table></div>
+  </section>
 
   <footer id="foot"></footer>
 </div>
@@ -428,6 +452,8 @@ const DATA = {
     ["m","TT29와 TT31 순서","TT28 인계기록은 다음 단계를 TT31로 지정. Task Card 순서상 TT29·TT30이 먼저."],
     ["m","미결 인수·검토 2건","TT04 = REVIEW_REQUIRED, TT15 = PENDING_ACCEPTANCE. 후속 Task는 진행됐으나 공식 수용 기록 없음."],
     ["m","CHANGELOG 누락 3건","TT08·TT09·TT23은 90_CHANGELOG에 행이 없음 (M01 규칙: Task당 1행)."],
+    ["m","부록 A 보고서 번호 중복","KOR_004와 KOR_005가 모두 ARAIB/AIR0602로 적혀 있음 (발생일 2006-04-19 / 2006-06-04). 원고 부록 확인 필요."],
+    ["m","분석기간 표기 불일치","M01·국문초록은 발생일 2005-01-09~2025-04-23인데, 부록 A의 발생일 범위는 2005-04-03~2022-10-22. 어느 쪽이 맞는지 확인 필요."],
     ["l","코드북 워크북 drift 재발","TT20 동결 코드북이 09-13, 09-18 두 번 작업본에서 어긋남. 매 Task 시작 시 hash 재확인 필요."],
     ["l","일정표 미반영","일정표_0917.png는 이미지라 내용을 읽지 못함. 마감일은 이 판에 없음."]
   ],
@@ -450,6 +476,7 @@ const DATA = {
     ["4.6 논리검증 · 4.7 SPARQL","서술만, 결과 없음","TT35·38"],
     ["전문가 타당성 · RQ2/RQ3 답변","자리표시","TT39·40"]
   ],
+  appendix: [["KOR_001", "KAIB/I0501", "2005-04-03", "준사고", "B747-200", "CORE"], ["KOR_002", "KAIB/AIR0504", "2005-07-14", "준사고", "B747-400", "CORE"], ["KOR_003", "ARAIB/AIR F0601", "2006-02-21", "준사고", "A321-211", "FULL·(HC)"], ["KOR_004", "ARAIB/AIR0602", "2006-04-19", "준사고", "B737-900", "CORE"], ["KOR_005", "ARAIB/AIR0602", "2006-06-04", "준사고", "B777-300", "CORE"], ["KOR_006", "ARAIB/AAR0603", "2006-06-09", "사고", "A321-100", "CORE"], ["KOR_007", "ARAIB/AAR0604", "2006-08-31", "사고", "DHC-8-402", "CORE"], ["KOR_008", "ARAIB/AAR0605", "2006-11-28", "사고", "ATR72-20", "CORE·(HC)"], ["KOR_009", "ARAIB/AIR0701", "2007-01-24", "준사고", "A300-600", "CORE"], ["KOR_010", "ARAIB/AIR0702", "2007-02-01", "준사고", "DHC8-402", "CORE"], ["KOR_011", "ARAIB/AIR0703", "2007-04-25", "준사고", "B737-500", "CORE"], ["KOR_012", "ARAIB/AIR0705", "2007-07-02", "준사고", "A330-300", "CORE"], ["KOR_013", "ARAIB/AIR0706", "2007-08-14", "준사고", "B747-400", "CORE"], ["KOR_014", "ARAIB/AIR0802", "2008-01-19", "준사고", "B747-400", "CORE·(HC)"], ["KOR_015", "ARAIB/AIR0803", "2008-02-17", "준사고", "B737-400", "CORE"], ["KOR_016", "ARAIB/AIR0805", "2008-03-09", "준사고", "A300-600", "CORE·(HC)"], ["KOR_017", "ARAIB/AIR0810", "2008-06-13", "준사고", "B737-400", "CORE"], ["KOR_018", "ARAIB/AIR-F0901", "2009-04-16", "준사고", "B747-400", "CORE"], ["KOR_019", "ARAIB/AIR0603", "2006-10-09", "준사고", "B747-400", "CORE"], ["KOR_020", "ARAIB/AIR0704", "2007-05-24", "준사고", "A330-300", "CORE"], ["KOR_021", "AIB/AAR-F0901", "2009-01-27", "사고", "B747-400", "CORE"], ["KOR_022", "ARAIB/AIRF0801", "2008-08-15", "준사고", "A340-300", "CORE"], ["KOR_023", "ARAIB/AIR-1001", "2010-01-16", "준사고", "A321-231", "CORE"], ["KOR_024", "ARAIB/AIR0908", "2009-11-30", "준사고", "A330-300", "CORE"], ["KOR_025", "ARAIB/AAR0701", "2007-08-12", "사고", "DHC-8-402", "FULL·(HC)"], ["KOR_026", "ARAIB/AIR-F1001", "2010-05-04", "준사고", "B747-300", "CORE"], ["KOR_027", "ARAIB/AIR-1008", "2010-09-03", "준사고", "B737-800", "CORE"], ["KOR_028", "ARAIB/AIR-0910", "2009-12-26", "준사고", "B777-200", "CORE"], ["KOR_029", "ARAIB/AIR-0902", "2009-06-30", "준사고", "A321", "CORE"], ["KOR_030", "ARAIB/AIR-1002", "2010-01-18", "준사고", "B767-300", "CORE"], ["KOR_031", "ARAIB/AIR1004", "2010-01-22", "준사고", "B767-300", "CORE"], ["KOR_032", "ARAIB/AAR-1005", "2010-10-09", "사고", "B747-400", "CORE"], ["KOR_033", "ARAIB/AIR1102", "2011-12-04", "준사고", "B737-800", "CORE"], ["KOR_034", "ARAIB/AIR1103", "2011-12-25", "준사고", "A330-323", "CORE"], ["KOR_035", "ARAIB/AIR1201", "2012-03-13", "준사고", "A320-232", "CORE"], ["KOR_036", "ARAIB/AIR1202", "2012-05-08", "준사고", "A321-231", "CORE"], ["KOR_037", "AIB/AIR-F1201", "2012-03-14", "준사고", "B777-200", "CORE"], ["KOR_038", "ARAIB/AIR1203", "2012-05-25", "준사고", "B737-500", "CORE"], ["KOR_039", "ARAIB/AAR1302", "2013-02-13", "사고", "A330-300", "CORE"], ["KOR_040", "ARAIB/AIR1101", "2011-05-26", "준사고", "A330-300", "CORE"], ["KOR_041", "ARAIB/AIR1301", "2013-02-03", "준사고", "B737", "CORE"], ["KOR_042", "ARAIB/AAR1303", "2013-04-16", "사고", "A321-200", "CORE·(HC)"], ["KOR_043", "AIB/AIR-F1203", "2012-12-31", "준사고", "B777-200", "CORE"], ["KOR_044", "ARAIB/AIR-1206", "2012-10-05", "준사고", "B737-700", "CORE"], ["KOR_045", "ARAIB/AAR1105", "2011-07-28", "사고", "B747-400", "CORE"], ["KOR_046", "ARAIB/AIR1504", "2015-05-28", "준사고", "B737-800", "CORE"], ["KOR_047", "ARAIB/AIR1501", "2015-01-13", "준사고", "B747-400", "CORE"], ["KOR_048", "ARAIB/AIR1505", "2015-07-05", "준사고", "B737-800", "CORE"], ["KOR_049", "ARAIB/AIR1601", "2016-01-25", "준사고", "B747-400", "CORE"], ["KOR_050", "ARAIB/AIR1603", "2016-03-18", "준사고", "A319-132", "CORE"], ["KOR_051", "ARAIB/AIR1506", "2015-07-14", "준사고", "A330-300", "CORE"], ["KOR_052", "ARAIB/AIR1508", "2015-12-23", "준사고", "B737-800", "CORE"], ["KOR_053", "ARAIB/AIR1605", "2016-08-07", "준사고", "B737-800", "CORE·(HC)"], ["KOR_054", "ARAIB/AAR1606", "2016-06-06", "사고", "MD-11F", "CORE·(HC)"], ["KOR_055", "ARAIB/AAR1902", "2019-05-13", "사고", "B737-900", "CORE·(HC)"], ["KOR_056", "ARAIB/AIR1905", "2019-09-07", "준사고", "B737-800", "CORE"], ["KOR_057", "ARAIB/AIR1907", "2019-11-15", "준사고", "A320-200", "CORE"], ["KOR_058", "ARAIB/AIR1906", "2019-10-29", "준사고", "A321-200", "CORE"], ["KOR_059", "ARAIB/AIR2003", "2020-08-16", "준사고", "B737-800", "CORE·(HC)"], ["KOR_060", "ARAIB/AAR2001", "2020-02-15", "사고", "B737-800", "CORE"], ["KOR_061", "ARAIB/AAR2102", "2021-05-28", "사고", "B767-300", "CORE"], ["KOR_062", "AIIB-2025-046", "2022-10-22", "사고", "A330-322", "FULL"]],
   papernote: "04_RESULTS에 V1~V7 (09-15~09-17). 국문초록의 논리검증·CQ 성공률·내용타당도 값은 '[]'로 비어 있음. 원고에 '4.6' 절 번호가 두 번 쓰임."
 };
 
@@ -537,5 +564,28 @@ $("#issues").innerHTML=DATA.issues.map(x=>`<li><span class="sev ${x[0]}">${SEV[x
 $("#timeline").innerHTML=DATA.timeline.map(x=>`<li><span class="d mono">${x[0]}</span>${esc(x[1])}</li>`).join("");
 $("#paper").innerHTML=DATA.paper.map(p=>`<div class="k">${esc(p[0])}<small>${esc(p[1])}</small></div><div class="v mono">${esc(p[2])}</div>`).join("");
 $("#papernote").textContent=DATA.papernote;
+/* 부록 A */
+const APX=DATA.appendix;
+const dupNo=(()=>{const c={};APX.forEach(r=>c[r[1]]=(c[r[1]]||0)+1);return new Set(Object.keys(c).filter(k=>c[k]>1));})();
+const FILTERS=[["all","전체"],["HC","HC 본코딩"],["FULL","FULL"],["사고","사고"],["준사고","준사고"]];
+let apxF="all";
+$("#apxChips").innerHTML=FILTERS.map(([k,l])=>`<button class="chip" type="button" data-f="${k}" aria-pressed="${k==="all"}">${l}</button>`).join("");
+function renderApx(){
+  const q=($("#apxQ").value||"").trim().toLowerCase();
+  const rows=APX.filter(r=>{
+    if(apxF==="HC"&&!r[5].includes("HC"))return false;
+    if(apxF==="FULL"&&!r[5].includes("FULL"))return false;
+    if((apxF==="사고"||apxF==="준사고")&&r[3]!==apxF)return false;
+    return !q||r.join(" ").toLowerCase().includes(q);
+  });
+  const acc=rows.filter(r=>r[3]==="사고").length;
+  $("#apxCount").textContent=`${rows.length}건 표시 · 사고 ${acc} · 준사고 ${rows.length-acc}`;
+  $("#apx").innerHTML=`<thead><tr><th>연구 ID</th><th>보고서 번호</th><th>발생일</th><th>구분</th><th>항공기종</th><th>연구 내 활용</th></tr></thead><tbody>`+
+   rows.map(r=>`<tr><td class="mono">${esc(r[0])}</td><td class="mono ${dupNo.has(r[1])?"dup":""}" ${dupNo.has(r[1])?'title="보고서 번호 중복"':""}>${esc(r[1])}</td><td class="mono">${esc(r[2])}</td><td class="kind-${r[3]}">${esc(r[3])}</td><td>${esc(r[4])}</td><td>${esc(r[5])}</td></tr>`).join("")+"</tbody>";
+}
+$("#apxChips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;apxF=b.dataset.f;document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));renderApx();});
+$("#apxQ").addEventListener("input",renderApx);
+renderApx();
+
 $("#foot").innerHTML=`출처 파일: <code>01_MASTER/M02_RESEARCH_MASTER.xlsx</code> (09-20) · <code>M03_CONFIG.yaml</code> · <code>M01_RESEARCH_MASTER.docx</code> · <code>T23_CODING_CDW_FINAL.xlsx</code> · <code>04_RESULTS/TT24_HUMAN_GOLD_FINAL_v1.0.xlsx</code> · <code>03_RESEARCH/TT25_REVIEW_LOG</code> · <code>TT28_*</code> · <code>04_RESULTS/…초안_V7.pdf</code>. 공정률 = 완료 100 · 검토대기 90 · 그 외 0, Task당 2.5%.`;
 </script>
