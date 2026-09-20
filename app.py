@@ -60,9 +60,23 @@ STATUS_COLOR = {
 # ---------------------------------------------------------------------------
 
 
+def _normalize_dropbox_url(url: str) -> str:
+    """Dropbox scl 링크를 직접 다운로드 가능한 형식으로 변환.
+    ?raw=1, ?dl=0, ?dl=1 어느 형태로 저장돼 있어도 모두 처리."""
+    if "dropbox.com" not in url:
+        return url
+    # www.dropbox.com → dl.dropboxusercontent.com (raw file streaming)
+    url = url.replace("://www.dropbox.com/", "://dl.dropboxusercontent.com/")
+    url = url.replace("://dropbox.com/", "://dl.dropboxusercontent.com/")
+    # dl=0 → dl=1 (raw=1 은 dl.dropboxusercontent.com에서 불필요하지만 안전상 유지)
+    url = url.replace("&dl=0", "&dl=1").replace("?dl=0", "?dl=1")
+    return url
+
+
 @st.cache_data(ttl=REFRESH_SECONDS, show_spinner=False)
 def fetch_text(url: str) -> str:
-    r = requests.get(url, timeout=15)
+    url = _normalize_dropbox_url(url)
+    r = requests.get(url, timeout=15, allow_redirects=True)
     r.raise_for_status()
     return r.text
 
