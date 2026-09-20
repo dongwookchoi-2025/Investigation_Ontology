@@ -1,0 +1,78 @@
+# =============================================================================
+# 항공안전 연구 진행현황 (연구주제4)
+# KCU 논문스터디 · 아래 값은 매일 갱신됩니다.
+# =============================================================================
+
+meta:
+  project: "항공안전 연구 (연구주제4)"
+  subtitle: "항공법령 특화 RAG"
+  team: ["전수련", "이동원", "Dongwook (Choi Dongwook)"]
+  updated: "2026-09-20"
+  updated_by: "Dongwook"
+
+# ---------- 마일스톤 -----------------------------------------------------------
+# status: todo | in_progress | blocked | done
+milestones:
+  - id: M1
+    name: "항공법령 코퍼스 수집·정제"
+    owner: "전수련"
+    status: in_progress
+    progress: 20
+    due: "2026-10-15"
+    note: "초기 setup 단계 — 진행상황 미확인"
+
+  - id: M2
+    name: "RAG 파이프라인 v1 (retrieval + generation)"
+    owner: "이동원"
+    status: in_progress
+    progress: 10
+    due: "2026-10-31"
+    note: "아키텍처 논의 중"
+
+  - id: M3
+    name: "코딩방법 · 코더 일치도 분석 (TT23/TT24)"
+    owner: "전수련, 이동원"
+    status: in_progress
+    progress: 40
+    due: "2026-10-05"
+    note: "TT23_CODING_CDW_FINAL 초안 제출됨"
+
+  - id: M4
+    name: "DOI 아카이빙 · 재현성 (Zenodo)"
+    owner: "Dongwook"
+    status: todo
+    progress: 0
+    due: "2026-11-15"
+    note: "본인 담당 task"
+
+  - id: M5
+    name: "논문 초고 작성 (한국경영과학회지 형식)"
+    owner: "전체"
+    status: todo
+    progress: 0
+    due: "2026-12-15"
+
+# ---------- 최근 실험/결과 -----------------------------------------------------
+experiments: []
+# 예시:
+#   - date: "2026-09-25"
+#     name: "BM25 baseline"
+#     retriever: "BM25"
+#     recall_at_5: 0.61
+#     note: "항공안전법 조문 100건 샘플"
+
+# ---------- 다음 액션 (7일 이내) -----------------------------------------------
+next_actions:
+  - owner: "Dongwook"
+    action: "Zenodo 계정 세팅 및 DOI 발급 프로세스 확인"
+  - owner: "전수련"
+    action: "TT28 pilot manifest 완성"
+  - owner: "이동원"
+    action: "RAG retriever 후보 (BM25/dense) 벤치 설계"
+
+# ---------- 이슈/리스크 --------------------------------------------------------
+issues: []
+# 예시:
+#   - opened: "2026-09-20"
+#     text: "항공안전법 시행규칙 개정본 반영 필요"
+#     owner: "전수련"
