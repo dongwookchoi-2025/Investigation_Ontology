@@ -114,14 +114,24 @@ footer code{font-family:"IBM Plex Mono",monospace;font-size:11.5px}
 .research{display:flex;flex-direction:column;gap:12px}
 .purpose{margin:0;font-size:14.5px;line-height:1.7;max-width:92ch}
 .purpose b{font-weight:600}
-.rqs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.rq{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
+.rqs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.rq{all:unset;box-sizing:border-box;cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--bg);min-width:0}
+.rq:hover{border-color:var(--accent)}
+.rq:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.rq[aria-expanded="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.rq .more{font-size:12px;color:var(--accent);font-weight:500;margin-top:2px}
+.lv{font-size:10.5px;padding:1px 7px;border-radius:999px;font-weight:500;white-space:nowrap}
+.lv-part{background:var(--review-soft);color:var(--review)}
+.lv-none{background:var(--todo-soft);color:var(--muted)}
+.rq-detail{border:1px solid var(--accent);border-radius:8px;background:var(--panel);overflow:hidden;min-width:0}
+.eta{background:var(--active-soft);color:var(--ink);border-radius:6px;padding:10px 12px;font-size:13.5px}
+.eta b{color:var(--active);margin-right:6px}
 .rq .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .rq .id{font-weight:600;color:var(--accent)}
 .rq .q{font-weight:600;line-height:1.45}
 .rq .m{font-size:12.5px;color:var(--muted)}
 .rq .st{font-size:12.5px;border-top:1px dashed var(--line);padding-top:6px}
-@media (max-width:900px){.rqs{grid-template-columns:1fr}}
+@media (max-width:900px){.rqs{grid-template-columns:minmax(0,1fr)}}
 .apx-tools{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:8px}
 .apx-tools input{flex:1 1 220px;min-width:0;font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
 .apx-tools input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
@@ -166,7 +176,7 @@ dialog::backdrop{background:var(--shade)}
   .phases{grid-template-columns:repeat(2,1fr)}
   .board{grid-template-columns:minmax(0,1fr)}
   .big{font-size:36px}
-  .detail th,.detail td,.detail td.num{white-space:normal;overflow-wrap:anywhere;padding:6px 6px;font-size:12.5px}
+  .rq-detail th,.rq-detail td,.rq-detail td.num,.detail th,.detail td,.detail td.num{white-space:normal;overflow-wrap:anywhere;padding:6px 6px;font-size:12.5px}
   .detail .rework td:first-child,.detail .rework th:first-child{white-space:nowrap;overflow-wrap:normal}
   .detail th{word-break:keep-all;overflow-wrap:normal}
   .db{padding:12px 12px 16px}.dh{padding:12px 12px 10px}.dh h2{font-size:16px}
@@ -181,7 +191,7 @@ dialog::backdrop{background:var(--shade)}
       <h1>비정형 항공사고 조사보고서 기반 시맨틱 온톨로지·지식그래프 구축·검증 연구</h1>
       <p class="sub" id="team"></p>
     </div>
-    <div class="asof">기준일 <b class="mono" id="asof"></b><br>M02 갱신 09-21 07:30 · 근거: 90_CHANGELOG · 91_FREEZE_REGISTRY</div>
+    <div class="asof">기준일 <b class="mono" id="asof"></b><br>M02 갱신 09-21 09:03 · 근거: 90_CHANGELOG · 91_FREEZE_REGISTRY</div>
   </header>
 
   <section class="research" aria-label="연구 개요">
@@ -278,16 +288,43 @@ const DATA = {
   research: {
     purpose: "국내 항공철도사고조사위원회가 발행한 국제항공운송사업자 관련 공식 최종 조사보고서 <b>62건</b>(발생일 2005-01-09~2025-04-23)을 대상으로, PDF의 비정형 서술에 흩어진 사고의 사건·조사결과·요인·원인·안전권고를 원문 page·block까지 역추적 가능한 형태로 구조화한다. ICAO ADREP/ECCAIRS·CICTT 표준에서 내려오는 <b>하향식 개념</b>과 실제 보고서에서 올라오는 <b>상향식 개념</b>을 합쳐 운영형 코드북(v0.2, 43개 코드)을 만들고, 3인 독립코딩으로 <b>Human Gold</b>(10개 보고서, 6,962 Unit)를 확정한 뒤 동일 조건의 <b>LLM 자동추출</b>과 비교한다. 결과를 RDF/OWL 지식그래프로 구현하고 Protégé·HermiT 논리검증, CQ/SPARQL 기능검증, 전문가 Delphi 내용타당성으로 단계적으로 검증하는 재현 가능한 통합 프레임워크를 제시하는 것이 목표다.",
     rqs: [
-      ["RQ1","항공사고조사 지식의 핵심 개념·관계를 어떻게 도출하고 구조화할 수 있는가?","하향식·상향식 개념도출, 운영형 코드북, 3인 독립코딩·Human Gold, LLM 추출 비교, RDF 매핑","진행 중 — 코드북·Human Gold·LLM 추출 동결. TT29 개체 평가 완료(F1 0.031), 관계 평가 재개 대기. RDF 매핑(TT30~32) 남음."],
+      ["RQ1","항공사고조사 지식의 핵심 개념·관계를 어떻게 도출하고 구조화할 수 있는가?","하향식·상향식 개념도출, 운영형 코드북, 3인 독립코딩·Human Gold, LLM 추출 비교, RDF 매핑","진행 중 — 코드북·Human Gold·LLM 추출 동결. TT29 STEP07까지 완료(개체 F1 0.031, 관계 탐지 F1 0.523, 근거 정확도 0.938). RDF 매핑(TT30~32) 남음."],
       ["RQ2","구축된 온톨로지는 구조적·논리적·내용적으로 타당한가?","Protégé 구조검토, HermiT 일관성·unsatisfiable class, ontology metrics, 전문가 Delphi/CVI","미착수 — M07 온톨로지 생성(TT32) 이후 TT33~TT36, TT39에서 검증."],
       ["RQ3","구축된 지식그래프는 CQ/SPARQL 기반 의미검색과 관계탐색에 활용 가능한가?","CQ 13문항(1-hop·2-hop·집계·비교·무응답), GraphDB 적재, expected vs actual 비교","준비 단계 — CQ v1.0-RC1 팀검토 대기. GraphDB·SPARQL 실행(TT37~TT38) 남음."]
     ],
+    pace: "속도 참고: 09-14~09-21 7일 동안 TT23~TT28 6개 Task가 끝남(약 6 Task/주). 아래 '예상 시점'은 이 속도가 유지된다는 가정의 단순 추정이며, 일정표_0917.png의 실제 마감일은 반영하지 못함.",
+    answers: {
+      RQ1: {
+        level:"부분 답변 가능",
+        text:"개념·관계를 체계적으로 도출하고 구조화하는 것은 가능하다는 쪽의 근거가 쌓였다. 국제표준(ADREP·CICTT)과 실제 보고서 개념을 합친 운영형 코드북(6개 상위 유형, 43개 코드, 7개 관계)이 만들어졌고, 10개 보고서 6,962 Unit에 적용해 Human Gold를 확정했다. 다만 ① 국내 보고서 용어와 국제표준이 정확히 일치하는 경우는 드물고(21개 중 EXACT 2), ② 인간 코더 간 일치도도 낮은 편이어서(κ 0.26~0.31) 경계 판단 규칙이 결과를 크게 좌우한다. LLM 자동추출은 형식(스키마 100%)과 근거 추적(93.8%)은 안정적이지만, 현재의 '문자열 완전 일치' 평가에서는 내용 일치도가 매우 낮다(개체 F1 0.031, 관계 triple F1 0.005). 이 수치가 모델의 한계인지 평가 규칙의 엄격함인지는 아직 가려지지 않았다.",
+        evidence:[["코드북 v0.2","6개 유형 · 43개 코드 · 7개 관계"],["국내 용어 ↔ 표준 매핑 (21개)","EXACT 2 · PARTIAL 14 · NONE 5"],["Human Gold","10개 보고서 · 6,962 Unit · 관계 triple 849"],["조정 전 3인 일치도 κ","CODE 0.261 · RELATION 0.311"],["LLM 스키마 적합 / 근거 정확도","1.000 / 0.938"],["LLM 관계 존재 탐지 F1","0.523"],["LLM 개체 F1 / 관계 triple F1 (완전일치)","0.031 / 0.005"]],
+        open:"평가 규칙(부분일치·alias 허용 여부) 결정, 3모델 비교 여부, RDF 변환 성공률(TT30~32)이 남아 있음.",
+        when:[["TT29","LLM 성능·오류분석","진행중 (STEP07 완료)"],["TT30","코드북→RDF 매핑 명세","다음"],["TT31","Namespace·IRI·Provenance","미착수"],["TT32","RDF/OWL 변환·TTL 생성","미착수"]],
+        eta:"남은 Task 4개 → 현재 속도로 약 1주 (평가 규칙 재논의 시 지연)"
+      },
+      RQ2: {
+        level:"아직 답변 불가",
+        text:"온톨로지 파일(M07)이 아직 만들어지지 않아 구조·논리·내용 타당성에 대한 직접 근거는 없다. 준비된 것은 판단 기준 쪽이다: 코드북에 부정문·미규명 원인은 positive Cause로 만들지 않는 규칙, 관계 방향 규칙이 정해져 있고, CQ 중 2개(CQ008·009)가 이 규칙을 검증하는 무응답 테스트로 설계돼 있다. 논리적 일관성(HermiT)과 전문가 내용타당성(Delphi/CVI)은 해당 Task가 끝나야 판단할 수 있다.",
+        evidence:[["M07 온톨로지 파일","미생성"],["Protégé·HermiT 검증 시트","비어 있음"],["Delphi 패널·합의기준","미정 (M01 §12 PENDING)"],["논리 규칙 사전 정의","부정·미규명 원인 제외, 관계 방향 규칙"]],
+        open:"TT32에서 OWL 생성 → TT33~36 구조·논리 검증 → TT39 전문가 검증 순서.",
+        when:[["TT32","OWL/TTL 생성","미착수"],["TT33~TT35","Protégé 구조 검토 · HermiT 논리검증","미착수"],["TT36","Metrics·버전 동결","미착수"],["TT39","전문가 Delphi/내용타당성","미착수 (패널 미정)"]],
+        eta:"구조·논리 부분은 약 1.5주 후(TT35), 내용타당성은 전문가 섭외·응답 기간에 따라 달라 추정 불가"
+      },
+      RQ3: {
+        level:"아직 답변 불가",
+        text:"지식그래프가 아직 GraphDB에 적재되지 않아 실행 결과가 없다. 대신 무엇을 검증할지는 확정 직전이다: CQ 13문항(1-hop 5 · 2-hop 4 · 무응답 2 · 집계 1 · 비교 1)마다 기대 답과 SPARQL 패턴, 근거 passage가 적혀 있다. 주의할 점은 CQ 4개(003·007·012·013)가 KOR_062를 묻는데, Human Gold 10건에는 KOR_062가 없어 해당 데이터를 어디서 가져올지 먼저 정해야 한다는 것이다.",
+        evidence:[["CQ 설계","13문항 · 기대답·SPARQL 패턴 작성"],["CQ 상태","RC1 팀검토 대기 (09-20 RC2 기록 유실)"],["KOR_062 의존 CQ","4개 (Gold 표본 밖)"],["GraphDB 적재 · SPARQL 실행","미착수"]],
+        open:"CQ 동결(TT22), KOR_062 데이터 출처 결정, GraphDB 적재(TT37) 후 실행.",
+        when:[["TT22","CQ v1.0 동결","검토대기"],["TT37","GraphDB 적재","미착수"],["TT38","CQ→SPARQL 기능검증","미착수"]],
+        eta:"TT32~TT36을 거쳐야 하므로 현재 속도로 약 1.5~2주 후"
+      }
+    },
     dlnote: "논문 초안 V7(hwp·pdf) 다운로드는 Streamlit 화면 맨 위 버튼을 사용하세요."
   },
   now: {
     task: "TT29",
-    title: "LLM vs Human Gold 성능평가 진행 중 (STEP04 재개 대기)",
-    text: "TT28 인계 포인터가 TT31에서 TT29로 정정됨(09-20). STEP01 조인·STEP02 정규화·STEP03 개체 평가 완료. STEP04 관계 평가는 Human Gold에 관계 triple이 없어 멈췄다가, 09-21 Relation Supplement v1.1(849 triple) 동결로 재개 가능 상태. 담당 이동원."
+    title: "LLM vs Human Gold 성능평가 — STEP07까지 완료, STEP08 대기",
+    text: "09-21 오전 이동원이 관계 평가(STEP04), 근거 정확도(STEP05), 클래스별 지표(STEP06), 오류유형 분류(STEP07)를 연달아 완료. 결과 파일은 04_RESULTS/TT29_이동원/에 있음. 다음은 STEP08."
   },
   phases: ["연구기획·구조","데이터 인벤토리·수집","PDF 추출·RAW JSON","Provenance·정제","분류체계·코드북","CQ·본코딩·Gold","LLM 프로토콜·추출","LLM 평가·RDF","Protégé·Reasoner","GraphDB·SPARQL·논문"],
   tasks: [
@@ -401,7 +438,7 @@ const DATA = {
    out:[["04_RESULTS/TT24_HUMAN_GOLD_FINAL_v1.0.xlsx","v1.0 FROZEN (C85F43CB…)"],["M02 40_RESULTS_MASTER TT24_R001~R009","FINAL"],["Relation Supplement v1.1 (관계 triple 849개)","v1.1 FROZEN (09-21, 2A56841D…)"]],
    tables:[{t:"조정 전 3인 일치도",c:["지표","일치율","Fleiss κ"],r:[["CODE","44.43% (3,093/6,962)","0.261"],["RELATION","68.4% (4,762/6,962)","0.311"],["CODE+RELATION","39.28% (2,735/6,962)","—"]]},{t:"조정 결과",c:["항목","건수"],r:[["CODE 불일치 재판정","3,869"],["RELATION 불일치 재판정","2,200"],["3인 온라인 합의","45"],["미해결","0"]]},{t:"Human Gold 분포",c:["GOLD_CODE","Unit","RELATION=YES"],r:[["NA","3,621","44"],["EVENT","1,539","240"],["FINDING","1,532","297"],["RECOMMENDATION","99","30"],["CAUSE","92","84"],["FACTOR","60","38"],["CASE","19","5"],["합계","6,962","738"]]}],
    rw:[["09-20","Human Gold는 RELATION=YES/NO만 있고 주어·술어·목적어 triple이 비어 있어 TT29 관계 평가 불가","Relation Supplement v1.1 작성·동결 (09-21): canonical triple 849개, 양성 passage 275/275 설명, 예외 승인 305건, 미해결 0. 원본 v1.0은 수정하지 않음"]],
-   gov:"Relation Supplement v1.1 폴더(04_RESULTS/TT24_RELATION_SUPPLEMENT_v1.1/)가 현재 Dropbox에 보이지 않음. 이동원 컴퓨터에만 있을 수 있음. 이동원 코딩본은 AI 보조 전수검토를 포함하므로 순수 독립 인간코딩으로 해석하지 않는다고 CHANGELOG에 명시됨."},
+   gov:"Relation Supplement v1.1은 04_RESULTS/TT29_이동원/ 안에 zip 패키지로 올라와 있음 (레지스트리 경로 04_RESULTS/TT24_RELATION_SUPPLEMENT_v1.1/와 다름). 이동원 코딩본은 AI 보조 전수검토를 포함하므로 순수 독립 인간코딩으로 해석하지 않는다고 CHANGELOG에 명시됨."},
   {id:"TT25",nm:"LLM 비교평가 프로토콜",own:"이동원",st:"frozen",dt:"2026-09-18",
    sum:"동일 코드북·입력·prompt·schema 조건의 3모델 비교 설계와 15개 고정 테스트셋(TEST_v1.0)을 확정. 최동욱 독립검토 PASS 후 v1.0 동결.",
    out:[["M02 31_LLM_EVALUATION 계획행 + M03 llm.benchmark","v1.0 FROZEN (20A98E00…)"],["TT25_REVIEW_LOG_20260918_CDW_PASS.md","PASS"]],
@@ -422,16 +459,18 @@ const DATA = {
    gov:"09-20 인계 포인터 정정: 다음 단계를 TT31 → TT29로 수정 (TT28 결과·hash 변경 없음).",
    rw:[["09-18","manifest 생성기가 CLEANED_JSON 파일명을 잘못 가정 → 실행 실패","파일 내부 report_id로 찾도록 수정 (API 호출 0)"],["09-18","생성기에서 NameError (import 누락) → 실행 실패","import·helper 수정 후 550행 생성 PASS"],["09-18","Full v1.0 QC FAIL: 없는 class code 사용(INVALID_SCHEMA 6), Factor·Cause 추출 0건 (Gold는 각 44·52 passage)","원인: prompt에 43개 코드 목록 미전달·schema 무제약 → CR_01로 v1.1 (코드 목록 + enum)"],["09-19","Pilot v1.1 NO-GO: 근거가 block 경계를 넘었다는 오류 78건","원인: API 입력에 없는 block 경계를 검증기가 강제 → CR_02로 v1.2 (경계 조건 제거)"],["09-19","Full v1.2 중 4건이 429 'API 크레딧 소진'으로 attempt 1~5 실패","크레딧 충전 후 승인된 4건만 attempt 6 실행 → 3 SUCCESS, 1 INVALID_EVIDENCE"]]},
   {id:"TT29",nm:"LLM vs Human Gold 성능·오류분석",own:"이동원",st:"active",dt:"2026-09-21",
-   sum:"동결된 TT28 추출결과(550 passage)와 Human Gold(6,962 Unit)를 passage 단위로 결합하고, 정규화 규칙을 먼저 고정한 뒤 개체(entity) 정확일치 평가를 완료. 관계 평가는 Gold 관계 triple 부재로 멈췄다가 Relation Supplement v1.1 동결로 재개 대기.",
-   out:[["M02 31_LLM_EVALUATION TT29 STEP01~04 행","기록"],["M02 40_RESULTS_MASTER TT29_R001~R029","STEP 결과"],["M04_pipeline.py (tt29_* 명령)","09-20 갱신"]],
+   sum:"동결된 TT28 추출결과(550 passage)와 Human Gold(6,962 Unit) + Relation Supplement v1.1(관계 triple 849개)을 비교. STEP01~07 완료, STEP08 대기. 모든 단계에서 API 재호출·동결 입력 수정 없음.",
+   out:[["04_RESULTS/TT29_이동원/ STEP04~06 보고서·CSV","09-21"],["TT24_RELATION_SUPPLEMENT_v1.1 패키지 (zip)","04_RESULTS/TT29_이동원/"],["M02 31_LLM_EVALUATION TT29 STEP01~07 행","기록"],["M02 40_RESULTS_MASTER TT29_R001~R080","STEP 결과"]],
    tables:[
-    {t:"단계별 진행",c:["STEP","내용","결과"],r:[["01","TT28 v1.2 ↔ Human Gold passage 결합","550 / 550 일치, 누락 0"],["02","비교 정규화 규칙 고정 (공백·소문자, 동의어 0쌍)","PASS · self-check 7/7"],["03","개체 정확일치 TP/FP/FN","PASS (아래 표)"],["04","관계 (주어·술어·목적어) 평가","BLOCKED → Supplement v1.1로 재개 대기"]]},
-    {t:"STEP03 개체 평가 (정확일치)",c:["유형","TP","FP","FN","Precision","Recall","F1"],r:[["전체","66","874","3,275","0.070","0.020","0.031"],["Case","0","17","19","0.000","0.000","0.000"],["Event","60","501","1,479","0.107","0.039","0.057"],["Finding","2","199","1,530","0.010","0.001","0.002"],["Factor","4","94","56","0.041","0.067","0.051"],["Cause","0","14","92","0.000","0.000","0.000"],["Recommendation","0","49","99","0.000","0.000","0.000"]],hl:0},
-    {t:"STEP04 관계 평가 준비",c:["항목","값"],r:[["Gold RELATION=YES / NO","738 / 6,224"],["LLM 예측 관계 triple","620개 (123 passage)"],["Supplement v1.1 canonical triple","849개"],["양성 passage 설명률","275 / 275 (예외만으로 설명 66)"]]}
+    {t:"단계별 진행",c:["STEP","내용","결과"],r:[["01","TT28 v1.2 ↔ Human Gold passage 결합","550 / 550 일치"],["02","비교 정규화 규칙 고정 (공백·소문자, 동의어 0쌍)","PASS"],["03","개체 정확일치 평가","F1 0.031"],["04","관계 평가 (passage 탐지 + triple 정확일치)","탐지 F1 0.523 · triple F1 0.005"],["05","근거(evidence) 정확도","0.938 (516/550)"],["06","클래스별 지표 독립 재계산","STEP03과 6/6 일치"],["07","7종 오류유형 분류","PASS"],["08","—","대기"]]},
+    {t:"핵심 지표 요약",c:["지표","Precision","Recall","F1"],r:[["개체 (정확일치)","0.070","0.020","0.031"],["관계 존재 탐지 (passage)","0.846","0.378","0.523"],["관계 triple (정확일치)","0.006","0.005","0.005"],["근거 정확도 (passage)","—","—","0.938"]],hl:1},
+    {t:"클래스별 개체 결과",c:["유형","Gold","예측","TP","FP","FN","F1"],r:[["Case","19","17","0","17","19","0.000"],["Event","1,539","561","60","501","1,479","0.057"],["Finding","1,532","201","2","199","1,530","0.002"],["Factor","60","98","4","94","56","0.051"],["Cause","92","14","0","14","92","0.000"],["Recommendation","99","49","0","49","99","0.000"]]},
+    {t:"술어별 관계 triple 결과",c:["Predicate","Gold","예측","TP","F1"],r:[["supportedBy","381","172","1","0.004"],["hasFinding","297","197","1","0.004"],["hasCause","84","14","0","0.000"],["contributedTo","31","76","1","0.019"],["hasRecommendation","30","49","0","0.000"],["recommendedTo","16","48","0","0.000"],["resultedIn","10","64","1","0.027"]]},
+    {t:"STEP07 오류유형",c:["유형","건수","비고"],r:[["missed_entity","3,219","Gold에 있으나 예측 없음"],["spurious_entity","818","Gold에 없는 예측"],["wrong_type","56","같은 span, 다른 유형"],["wrong_relation","856","Gold 누락 845 + 확인된 오예측 11"],["wrong_direction","0","방향 비교 가능 5건 중 0"],["unsupported_evidence","59","개체 45 · 관계 14 (34 passage)"],["schema_failure","0",""],["관계 endpoint 미해결 (수동검토)","605 / 620","Gold endpoint와 정확히 연결 안 됨"]]}
    ],
-   rw:[["09-20","STEP04: Human Gold에 관계 triple(주어·술어·목적어)이 전혀 없어 관계 P/R/F1·방향오류 계산 불가 → BLOCKED","관계 Gold를 임의 변환하지 않고 Relation Supplement v1.1을 별도 작성·동결(09-21) → 재개 대기"]],
-   gov:"개체 평가는 Gold entity_text와 LLM 근거 원문(span)을 정규화 후 문자열 전체가 같을 때만 정답으로 셈 (부분일치·의미일치 없음). 이 규칙이 F1 0.031에 미치는 영향은 최종 동결 전 독립검토 대상으로 기록돼 있음."},
-  {id:"TT30",nm:"코드북→RDF Triple 매핑 명세",own:"이동원",st:"next",dt:"—",sum:"32_RDF_MAPPING 시트가 비어 있음.",out:[["M02 32_RDF_MAPPING","미작성"]]},
+   rw:[["09-20","STEP04: Human Gold에 관계 triple(주어·술어·목적어)이 없어 관계 평가 불가 → BLOCKED","Relation Supplement v1.1 작성·동결(09-21) 후 재개 → 09-21 PASS"]],
+   gov:"개체·관계 모두 '정규화 후 문자열 전체 일치'만 정답으로 셈 (부분·의미 일치 없음, 승인된 alias map 없음). 관계 탐지 F1은 0.523인데 triple F1이 0.005인 것, 예측 관계 620개 중 605개가 Gold endpoint에 연결되지 않은 것은 이 규칙의 영향이 큼을 시사함. 동결 전 독립검토 대상."},
+  {id:"TT30",nm:"코드북→RDF Triple 매핑 명세",own:"최동욱",st:"next",dt:"—",sum:"32_RDF_MAPPING 시트가 비어 있음.",out:[["M02 32_RDF_MAPPING","미작성"]]},
   {id:"TT31",nm:"Namespace·IRI·Provenance 규칙",own:"이동원",st:"todo",dt:"—",
    sum:"TT28 인계 포인터는 09-20 TT29로 정정됨. TT31 입력은 동결 M06·manifest(RUN_20260919_OPENAI_V12_001)와 Human Gold v1.0 (+ Relation Supplement v1.1).",
    out:[["M03 rdf.base_iri","example.org 임시값"],["Namespace/IRI","PENDING (M01 §12)"]],
@@ -456,13 +495,15 @@ const DATA = {
     ["CODE 3인 일치 / Fleiss κ","조정 전 독립코딩","44.43% · 0.261"],
     ["RELATION 3인 일치 / Fleiss κ","조정 전 독립코딩","68.4% · 0.311"],
     ["LLM 최종 추출 성공","550 passage, Prompt v1.2","516 (93.8%)"],
-    ["LLM 개체 F1 (TT29 STEP03)","정확일치, TP 66 / FP 874 / FN 3,275","0.031"],
+    ["LLM 개체 F1 (TT29)","정확일치, TP 66 / FP 874 / FN 3,275","0.031"],
+    ["LLM 관계 탐지 F1 / triple F1","passage 단위 / 정확일치","0.523 / 0.005"],
+    ["근거(evidence) 정확도","516 / 550 passage","0.938"],
     ["Gold 관계 triple (Supplement v1.1)","양성 passage 275/275","849개"]
   ],
   issues: [
-    ["h","09-20 M02 수정 3건이 09-21 파일에서 사라짐","09-20 09:49 저장본에 있던 TT04 검토완료 · TT15 인수확인 · TT22 RC2(검토란 13칸, 레지스트리, CHANGELOG)가 09-21 07:30 저장본에 없음. TT29 작업이 09-20 이전 사본 위에서 저장된 것으로 보임. Dropbox 버전기록에서 09-20 09:49 판을 찾아 해당 행을 다시 옮겨야 함."],
-    ["h","LLM 개체 F1 0.031 — 평가 규칙 확인 필요","TT29 STEP03은 Gold entity_text와 LLM 근거 span의 문자열 전체 일치만 정답으로 셈. Human Gold는 Unit(문장·행) 단위로 코딩됐고 LLM은 구 단위 span을 내므로, 규칙 자체가 점수를 크게 낮췄을 가능성이 있음. 동결 전 독립검토 권장."],
-    ["h","Relation Supplement 파일이 Dropbox에 없음","레지스트리는 04_RESULTS/TT24_RELATION_SUPPLEMENT_v1.1/을 가리키지만 04_RESULTS에 해당 폴더가 없음. 동결 산출물이므로 공유폴더 업로드 필요."],
+    ["h","09-20 M02 수정 3건이 여전히 빠져 있음","09-20 09:49 저장본에 있던 TT04 검토완료 · TT15 인수확인 · TT22 RC2가 09-21 07:30 · 09:03 저장본 모두에 없음. Dropbox 버전기록에서 09-20 09:49 판을 찾아 해당 행을 다시 옮겨야 함. 이후 M02 저장 전 최신본 확인 필요."],
+    ["h","TT29 점수와 평가 규칙","개체 F1 0.031, 관계 triple F1 0.005는 '문자열 전체 일치'만 인정한 결과. 같은 데이터에서 관계 존재 탐지 F1은 0.523이고, 예측 관계 620개 중 605개는 Gold endpoint에 연결 자체가 안 됨. Human Gold는 문장·행 단위, LLM은 구 단위 span이라 규칙 영향이 큼. 논문 표 11에 넣기 전 규칙(부분일치·alias map 등)을 팀이 결정하고 독립검토 필요."],
+    ["m","Relation Supplement 저장 위치","zip 패키지가 04_RESULTS/TT29_이동원/에 올라왔으나, 레지스트리는 04_RESULTS/TT24_RELATION_SUPPLEMENT_v1.1/을 가리킴. STEP04 보고서가 언급한 재현 스크립트·CSV(RECALC.py, EXACT_MATCHES.csv 등)도 폴더에 보이지 않음 (zip 안에 있을 수 있음)."],
     ["h","공정관리표(Tracker V1)가 실제와 다름","기준일 08-19에 멈춰 TT21~TT40을 미착수로 표시. 00_DASHBOARD 전체 공정률도 수식 오류로 5000.0%."],
     ["h","3모델 비교 설계 vs 1모델 실행","TT25 프로토콜·원고 표 11은 3개 모델 비교가 전제. TT29도 gpt-5.6-terra 1개만 평가 중."],
     ["m","CQ 대상과 Gold 표본 불일치","CQ003·007·012·013은 KOR_062를 묻는데, Human Gold 10건에는 KOR_062가 제외됨."],
@@ -472,6 +513,7 @@ const DATA = {
     ["l","일정표 미반영","일정표_0917.png는 이미지라 내용을 읽지 못함."]
   ],
   timeline: [
+    ["09-21","TT29 STEP04~07 완료 (관계·근거·클래스별·오류유형)"],
     ["09-21","TT24 Relation Supplement v1.1 FROZEN (triple 849)"],
     ["09-20","TT29 STEP01~03 완료 · STEP04 BLOCKED · TT28 인계 포인터 TT29로 정정"],
     ["09-20","TT28 M06 v1.2 FROZEN · CLOSED (최동욱 독립 재계산 일치)"],
@@ -487,7 +529,7 @@ const DATA = {
     ["최신본","V7 (hwp/pdf)","2026-09-17"],
     ["Ⅰ~Ⅲ 서론·이론·연구설계","본문 작성됨",""],
     ["4.1~4.3 데이터·코드북·Human Gold","결과 수치 반영됨",""],
-    ["4.4 LLM 성능 (표 11)","빈 표 — 개체 결과 나옴","TT29"],
+    ["4.4 LLM 성능 (표 11)","빈 표 — TT29 결과 나옴 (1개 모델)","TT29"],
     ["4.5 RDF/OWL 구축 (표 12)","빈 표","TT30~32"],
     ["4.6 논리검증 · 4.7 SPARQL","서술만, 결과 없음","TT35·38"],
     ["전문가 타당성 · RQ2/RQ3 답변","자리표시","TT39·40"]
@@ -505,7 +547,29 @@ const T=DATA.tasks;
 
 $("#asof").textContent=DATA.asof;
 $("#purpose").innerHTML=DATA.research.purpose;
-$("#rqs").innerHTML=DATA.research.rqs.map(r=>`<div class="rq"><div class="top"><span class="id mono">${esc(r[0])}</span></div><div class="q">${esc(r[1])}</div><div class="m">방법: ${esc(r[2])}</div><div class="st">${esc(r[3])}</div></div>`).join("");
+$("#rqs").innerHTML=DATA.research.rqs.map((r,i)=>{const a=DATA.research.answers[r[0]]||{};return `<button class="rq" type="button" data-rq="${esc(r[0])}" aria-expanded="false"><span class="top"><span class="id mono">${esc(r[0])}</span><span class="lv lv-${a.level&&a.level.includes("부분")?"part":"none"}">${esc(a.level||"")}</span></span><span class="q">${esc(r[1])}</span><span class="m">방법: ${esc(r[2])}</span><span class="st">${esc(r[3])}</span><span class="more">잠정 답변·확정 시점 보기 ▾</span></button>`;}).join("");
+let openRq=null;
+function closeRq(){const d=document.querySelector(".rq-detail");if(d)d.remove();document.querySelectorAll(".rq[aria-expanded=true]").forEach(b=>{b.setAttribute("aria-expanded","false");b.querySelector(".more").textContent="잠정 답변·확정 시점 보기 ▾";});openRq=null;}
+$("#rqs").addEventListener("click",e=>{
+  const b=e.target.closest(".rq");if(!b)return;
+  const id=b.dataset.rq;if(openRq===id){closeRq();return;}
+  closeRq();
+  const a=DATA.research.answers[id];const r=DATA.research.rqs.find(x=>x[0]===id);
+  const d=document.createElement("div");d.className="rq-detail";d.setAttribute("role","region");d.setAttribute("aria-label",id+" 잠정 답변");
+  d.innerHTML=`<div class="dh"><div><div class="eyebrow mono">${id} · ${esc(a.level)}</div><h2>${esc(r[1])}</h2></div><button class="x" type="button" aria-label="닫기">×</button></div>
+  <div class="db">
+    <div class="blk"><h3>현재까지 근거로 본 잠정 답변</h3><p class="sum">${esc(a.text)}</p></div>
+    <div class="blk"><h3>근거 지표</h3>${table({c:["항목","현재 값"],r:a.evidence,plain:true})}</div>
+    <div class="blk"><h3>확정 답이 나오려면</h3><p class="sum" style="margin-bottom:6px">${esc(a.open)}</p>${table({c:["Task","내용","상태"],r:a.when})}</div>
+    <div class="eta"><b>예상 시점</b> ${esc(a.eta)}</div>
+    <p class="note" style="margin:0">${esc(DATA.research.pace)}</p>
+  </div>`;
+  // insert after the row: on wide screens after the grid, on narrow after the card
+  const narrow=window.matchMedia("(max-width:900px)").matches;
+  if(narrow) b.after(d); else $("#rqs").after(d);
+  b.setAttribute("aria-expanded","true");b.querySelector(".more").textContent="닫기 ▴";openRq=id;
+  d.querySelector(".x").addEventListener("click",()=>{closeRq();b.focus();});
+});
 $("#dlnote").textContent=DATA.research.dlnote;
 $("#team").textContent=DATA.team;
 
@@ -543,7 +607,7 @@ function table(tb){
   const head=`<thead><tr>${tb.c.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead>`;
   const body=tb.r.map((row,ri)=>{
     const cls=ri===tb.hl?"hl":bad.has(ri)?"bad":"";
-    return `<tr class="${cls}">${row.map(v=>{const s=String(v);const num=/^[\d,.\s%/()—~-]+$/.test(s)&&/\d/.test(s);return `<td class="${num?"num":""}">${esc(v)}</td>`;}).join("")}</tr>`;
+    return `<tr class="${cls}">${row.map(v=>{const s=String(v);const num=!tb.plain&&/^[\d,.\s%/()—~-]+$/.test(s)&&/\d/.test(s);return `<td class="${num?"num":""}">${esc(v)}</td>`;}).join("")}</tr>`;
   }).join("");
   return `<div class="tbl"><table>${head}<tbody>${body}</tbody></table></div>`;
 }
